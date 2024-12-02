@@ -1,0 +1,2636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthCare Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+    
+    /* Add these gradient variables */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #2A2D43, #7C4DFF);
+        --accent-gradient: linear-gradient(135deg, #7C4DFF, #B47DFF);
+        --text-gradient: linear-gradient(135deg, #7C4DFF 0%, #B47DFF 100%);
+    }
+
+    body {
+        background: linear-gradient(135deg, #a2acd5, #ddcccc, #1f1e1b);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Hero section with large text */
+    header {
+        min-height: 60vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+    .chat-bot-button {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(45deg, #00ff87, #60efff);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        transition: transform 0.3s ease;
+    }
+
+    .chat-bot-button:hover {
+        transform: scale(1.1);
+    }
+
+    .chat-container {
+        position: fixed;
+        bottom: 100px;
+        right: 30px;
+        width: 380px;
+        height: 600px;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        display: none;
+        flex-direction: column;
+        z-index: 1000;
+        overflow: hidden;
+    }
+
+    .chat-header {
+        padding: 20px;
+        background: linear-gradient(135deg, #00ff87, #60efff);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .chat-header-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .bot-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .bot-avatar i {
+        color: #60efff;
+        font-size: 20px;
+    }
+
+    .bot-status {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .bot-status span:first-child {
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+
+    .bot-status span:last-child {
+        font-size: 0.8em;
+        opacity: 0.8;
+    }
+
+    .chat-messages {
+        flex-grow: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: #f8f9fa;
+    }
+
+    .message {
+        margin: 15px 0;
+        max-width: 85%;
+        position: relative;
+        padding: 15px 20px;
+        line-height: 1.5;
+    }
+
+    .bot-message {
+        background: white;
+        border-radius: 20px 20px 20px 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .bot-message ul {
+        margin: 5px 0;
+        padding-left: 20px;
+    }
+
+    .bot-message li {
+        margin: 5px 0;
+    }
+
+    .user-message {
+        background: linear-gradient(135deg, #00ff87, #60efff);
+        color: white;
+        border-radius: 20px 20px 5px 20px;
+        margin-left: auto;
+    }
+
+    .typing-indicator {
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .typing-dot {
+        width: 8px;
+        height: 8px;
+        background: #90a4ae;
+        border-radius: 50%;
+        animation: typingBounce 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typingAnimation {
+        0%, 60%, 100% { transform: translateY(0); }
+        30% { transform: translateY(-5px); }
+    }
+
+    .chat-input {
+        padding: 20px;
+        background: white;
+        border-top: 1px solid #eee;
+    }
+
+    .input-container {
+        display: flex;
+        gap: 10px;
+        background: #f8f9fa;
+        padding: 12px 20px;
+        border-radius: 30px;
+        border: 2px solid #e9ecef;
+        margin-bottom: 10px;
+    }
+
+    .input-container input {
+        flex-grow: 1;
+        border: none;
+        padding: 12px;
+        font-size: 1em;
+        background: transparent;
+        outline: none;
+    }
+
+    .send-button {
+        background: linear-gradient(135deg, #00ff87, #60efff);
+        border: none;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .send-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .quick-actions {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 10px;
+        overflow-x: auto;
+        padding: 5px;
+    }
+
+    .action-btn {
+        background: white;
+        border: 1px solid #dee2e6;
+        padding: 8px 15px;
+        border-radius: 20px;
+        color: #495057;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9em;
+    }
+
+    .action-btn:hover {
+        background: #f8f9fa;
+        border-color: #60efff;
+        color: #60efff;
+    }
+
+    .action-btn i {
+        font-size: 1em;
+    }
+
+    .suggestion-chips {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+
+    .suggestion-chip {
+        background: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.9em;
+        color: #007bff;
+        border: 1px solid #007bff;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .suggestion-chip:hover {
+        background: #007bff;
+        color: white;
+    }
+
+    header h1 {
+        font-size: 5rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        margin: 20px 0;
+        text-transform: uppercase;
+        background: var(--text-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: fadeInDown 1s ease-out;
+        font-family: 'Playfair Display', serif;
+        text-shadow: 2px 2px 4px rgba(124, 77, 255, 0.2);
+    }
+
+    /* Modern card layout */
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .service-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 25px;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .service-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Service icons styling with animations */
+    .service-icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.5s ease;
+        animation: iconFloat 3s ease-in-out infinite;
+    }
+
+    /* Custom colors for different service icons */
+    .service-card:nth-child(1) .service-icon {
+        color: #FF6B6B;  /* Health Monitoring - Warm Red */
+    }
+
+    .service-card:nth-child(2) .service-icon {
+        color: #4ECDC4;  /* Medication - Turquoise */
+    }
+
+    .service-card:nth-child(3) .service-icon {
+        color: #96E6A1;  /* Fitness - Fresh Green */
+    }
+
+    .service-card:nth-child(4) .service-icon {
+        color: #FFD93D;  /* Diet - Sunny Yellow */
+    }
+
+    .service-card:nth-child(5) .service-icon {
+        color: #FF8E9E;  /* Diseases - Soft Pink */
+    }
+
+    .service-card:nth-child(6) .service-icon {
+        color: #6C63FF;  /* Doctors - Royal Purple */
+    }
+
+    .service-card:nth-child(7) .service-icon {
+        color: #45B7D1;  /* Hospitals - Sky Blue */
+    }
+
+    .service-card:nth-child(8) .service-icon {
+        color: #FFB6C1;  /* Medical Equipment - Light Pink */
+    }
+
+    .service-card:nth-child(9) .service-icon {
+        color: #98FB98;  /* Ayurveda - Light Green */
+    }
+
+    /* Hover effect */
+    .service-card:hover .service-icon {
+        transform: scale(1.2);
+        filter: brightness(1.2);
+    }
+
+    /* Floating animation */
+    @keyframes iconFloat {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    /* Pulse animation on hover */
+    .service-card:hover .service-icon {
+        animation: iconPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes iconPulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* Add shimmer effect */
+    .service-icon::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: linear-gradient(
+            45deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.2) 50%,
+            transparent 100%
+        );
+        animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+        0% {
+            transform: translateX(-100%);
+        }
+        100% {
+            transform: translateX(100%);
+        }
+    }
+
+    /* Glassmorphism effect for auth buttons */
+    .auth-buttons {
+        position: fixed;
+        top: 20px;
+        right: 30px;
+        display: flex;
+        gap: 15px;
+        z-index: 1000;
+    }
+
+    .login-btn, .signup-btn {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 30px;
+        font-family: 'Playfair Display', serif;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(124, 77, 255, 0.2);
+    }
+
+    .signup-btn {
+        background: var(--accent-gradient);
+    }
+
+    .login-btn:hover, .signup-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(124, 77, 255, 0.3);
+    }
+
+    /* Animated subcategories */
+    .subcategories li {
+        padding: 8px 15px;
+        margin: 5px 0;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+    .logo-container {
+        margin-bottom: 20px;
+        animation: floatAnimation 3s ease-in-out infinite;
+        background: var(--primary-gradient);
+        padding: 15px;
+        border-radius: 50%;
+        box-shadow: 0 10px 30px rgba(124, 77, 255, 0.2);
+    }
+    
+    .logo {
+        width: 120px;
+        height: 120px;
+        filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+    }
+    
+    .tagline {
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #2A2D43;
+        margin: 15px 0;
+        letter-spacing: 1px;
+        animation: fadeInUp 1s ease-out 0.3s backwards;
+        font-family: 'Cormorant Garamond', serif;
+    }
+    
+    .description {
+        font-size: 1.2rem;
+        color: #4A4D63;
+        max-width: 800px;
+        text-align: center;
+        margin: 20px auto;
+        line-height: 1.6;
+        animation: fadeInUp 1s ease-out 0.6s backwards;
+        font-family: 'Cormorant Garamond', serif;
+        font-weight: 400;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Animations */
+    @keyframes floatAnimation {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+    }
+    
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        header h1 {
+            font-size: 3.5rem;
+        }
+        
+        .tagline {
+            font-size: 1.4rem;
+        }
+        
+        .description {
+            font-size: 1rem;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            width: 100px;
+            height: 100px;
+        }
+    }
+    .subcategories li:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateX(10px);
+        padding-left: 25px;
+    }
+
+    /* Loading animation */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .service-card {
+        animation: fadeIn 0.6s ease-out;
+        animation-fill-mode: backwards;
+    }
+
+    /* Stagger the animation for each card */
+    .service-card:nth-child(1) { animation-delay: 0.1s; }
+    .service-card:nth-child(2) { animation-delay: 0.2s; }
+    .service-card:nth-child(3) { animation-delay: 0.3s; }
+    /* ... continue for other cards ... */
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1001;
+        backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+        position: relative;
+        background: white;
+        margin: 15% auto;
+        padding: 30px;
+        width: 90%;
+        max-width: 400px;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .close-btn {
+        position: absolute;
+        right: 20px;
+        top: 15px;
+        font-size: 24px;
+        cursor: pointer;
+        color: #666;
+    }
+
+    .close-btn:hover {
+        color: #333;
+    }
+
+    .login-form, .signup-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    .login-form input, .signup-form input {
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1em;
+    }
+
+    .login-form button, .signup-form button {
+        padding: 12px;
+        background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 1em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .login-form button:hover, .signup-form button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-form a, .signup-form a {
+        color: #60efff;
+        text-decoration: none;
+    }
+
+    .login-form a:hover, .signup-form a:hover {
+        text-decoration: underline;
+    }
+
+    /* Footer Styles */
+    .site-footer {
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        padding: 40px 0 20px;
+        margin-top: 50px;
+        color: white;
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        padding: 0 20px;
+    }
+
+    .footer-section {
+        margin: 20px;
+        min-width: 250px;
+    }
+
+    .footer-section h3 {
+        color: #00ff87;
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+    }
+
+    .footer-section p {
+        margin: 10px 0;
+        color: #ffffff;
+    }
+
+    .footer-section i {
+        margin-right: 10px;
+        color: #00ff87;
+    }
+
+    /* Review Section Styles */
+    .reviews {
+        flex-grow: 1;
+        max-width: 500px;
+    }
+
+    .review-carousel {
+        display: flex;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .review {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+        margin: 10px;
+        min-width: 280px;
+        animation: slideReview 15s infinite linear;
+    }
+
+    .stars {
+        color: #FFD700;
+        margin-bottom: 10px;
+    }
+
+    .review p {
+        font-style: italic;
+        margin: 10px 0;
+    }
+
+    .review small {
+        color: #00ff87;
+    }
+
+    /* Footer Bottom */
+    .footer-bottom {
+        text-align: center;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-bottom p {
+        margin: 5px 0;
+        font-size: 0.9rem;
+        color: #ffffff;
+    }
+
+    /* Review Animation */
+    @keyframes slideReview {
+        0%, 25% {
+            transform: translateX(0);
+        }
+        33%, 58% {
+            transform: translateX(-100%);
+        }
+        66%, 91% {
+            transform: translateX(-200%);
+        }
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .footer-section {
+            flex-basis: 100%;
+            text-align: center;
+        }
+        
+        .review-carousel {
+            flex-direction: column;
+        }
+        
+        .review {
+            min-width: unset;
+            animation: none;
+        }
+    }
+</style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="https://cdn-icons-png.flaticon.com/512/4320/4320371.png" alt="Hospital Logo" class="logo">
+        </div>
+        <h1>
+            <span class="medi">Medi</span>
+            <span class="bot">Bot</span>
+        </h1>
+        <p class="tagline">Your 24/7 AI-Powered Healthcare Companion</p>
+        <div class="description">
+            Revolutionizing healthcare with intelligent assistance, personalized care, and instant medical guidance
+        </div>
+        <div class="auth-buttons">
+            <a href="#" class="login-btn" onclick="openModal('loginModal')">
+                <i class="fas fa-user"></i> Login
+            </a>
+            <a href="#" class="signup-btn" onclick="openModal('signupModal')">
+                <i class="fas fa-user-plus"></i> Sign Up
+            </a>
+        </div>
+    </header>
+    
+   
+
+    <section class="services-section">
+        <h2>Our Services</h2>
+        <div class="services-grid">
+            <div class="service-card" onclick="window.location.href='https://timer-eosin-nine.vercel.app/'">
+                <i class="fas fa-pills service-icon"></i>
+                <h3>Medication Reminder</h3>
+                <p>Never miss your medications</p>
+                <p style="margin-top: 10px; font-size: 0.8em; color: #4ecdc4;">Click to set reminders</p>
+            </div>
+            <div class="service-card" onclick="window.location.href='https://medifit-95rz.vercel.app/'">
+                <i class="fas fa-dumbbell service-icon"></i>
+                <h3>Fitness Tracking</h3>
+                <p>Monitor your workout progress</p>
+                <p style="margin-top: 10px; font-size: 0.8em; color: #4ecdc4;">Click to access Fitness Tracker</p>
+            </div>
+            <div class="service-card" onclick="window.location.href='https://health-chat-bot-1.vercel.app/'">
+                <i class="fas fa-apple-alt service-icon"></i>
+                <h3>Diet Planning</h3>
+                <p>Personalized nutrition advice</p>
+                <p style="margin-top: 10px; font-size: 0.8em; color: #4ecdc4;">Click to access Diet Assistant</p>
+            </div>
+            <div class="service-card" onclick="window.location.href='https://medi-doctor-zeta.vercel.app/'">
+                <i class="fas fa-virus service-icon"></i>
+                <h3>Diseases</h3>
+                <p>Information about various diseases</p>
+                <div class="disease-subcategories">
+                    <ul style="list-style: none; padding: 0; text-align: left;">
+                        <li><i class="fas fa-circle fa-xs"></i> Cardiovascular</li>
+                        <li><i class="fas fa-circle fa-xs"></i> Respiratory</li>
+                        <li><i class="fas fa-circle fa-xs"></i> Neurological</li>
+                        <li><i class="fas fa-circle fa-xs"></i> Digestive</li>
+                    </ul>
+                </div>
+                <p style="margin-top: 10px; font-size: 0.8em; color: #4ecdc4;">Click to learn more about diseases</p>
+            </div>
+            <div class="service-card" onclick="window.location.href='https://list1-rosy.vercel.app/'">
+                <i class="fas fa-user-md service-icon"></i>
+                <h3>Doctors</h3>
+                <p>Find specialized healthcare professionals</p>
+                <div class="doctor-subcategories">
+                    <ul style="list-style: none; padding: 0; text-align: left;">
+                        <li><i class="fas fa-circle fa-xs"></i> Cardiologists</li>
+                        <li><i class="fas fa-circle fa-xs"></i> Neurologists</li>
+                        <li><i class="fas fa-circle fa-xs"></i> Pediatricians</li>
+                        <li><i class="fas fa-circle fa-xs"></i> Orthopedics</li>
+                        <li><i class="fas fa-circle fa-xs"></i> Dermatologists</li>
+                    </ul>
+                </div>
+                <p style="margin-top: 10px; font-size: 0.8em; color: #4ecdc4;">Click to view available doctors</p>
+            </div>
+            <div class="service-card" onclick="window.location.href='https://hospital-data-hazel.vercel.app/'">
+                <i class="fas fa-hospital service-icon"></i>
+                <h3>Hospitals</h3>
+                <p>Locate nearby medical facilities</p>
+                <div class="hospital-subcategories">
+                    <ul style="list-style: none; padding: 0; text-align: left;">
+                        <li><i class="fas fa-circle fa-xs"></i> Emergency Hospitals</li>
+                        <li><i class="fas fa-circle fa-xs"></i> Specialty Clinics</li>
+                        <li><i class="fas fa-circle fa-xs"></i> Diagnostic Centers</li>
+                        <li><i class="fas fa-circle fa-xs"></i> Rehabilitation Centers</li>
+                    </ul>
+                </div>
+                <p style="margin-top: 10px; font-size: 0.8em; color: #4ecdc4;">Click to find hospitals in your city</p>
+            </div>
+            <div class="service-card" onclick="window.location.href='https://medieq-kc1a.vercel.app/'">
+                <i class="fas fa-briefcase-medical service-icon"></i>
+                <h3>Medical Equipment</h3>
+                <p>Essential medical devices and supplies</p>
+                <div class="equipment-subcategories">
+                    <ul style="list-style: none; padding: 0; text-align: left;">
+                        <li><i class="fas fa-circle fa-xs"></i> Monitoring Devices</li>
+                        <li><i class="fas fa-circle fa-xs"></i> Mobility Aids</li>
+                        <li><i class="fas fa-circle fa-xs"></i> First Aid Supplies</li>
+                        <li><i class="fas fa-circle fa-xs"></i> Home Care Equipment</li>
+                    </ul>
+                </div>
+                <p style="margin-top: 10px; font-size: 0.8em; color: #4ecdc4;">Click to browse equipment</p>
+            </div>
+            <div class="service-card" onclick="window.location.href='https://ayurveda-sooty.vercel.app/'">
+                <i class="fas fa-leaf service-icon"></i>
+                <h3>Ayurveda</h3>
+                <p>Traditional holistic healing</p>
+                <div class="ayurveda-subcategories">
+                    <ul style="list-style: none; padding: 0; text-align: left;">
+                        <li><i class="fas fa-circle fa-xs"></i> Herbal Medicines</li>
+                        <li><i class="fas fa-circle fa-xs"></i> Panchakarma</li>
+                        <li><i class="fas fa-circle fa-xs"></i> Yoga & Meditation</li>
+                        <li><i class="fas fa-circle fa-xs"></i> Diet & Lifestyle</li>
+                        <li><i class="fas fa-circle fa-xs"></i> Ayurvedic Practitioners</li>
+                    </ul>
+                </div>
+                <p style="margin-top: 10px; font-size: 0.8em; color: #4ecdc4;">Click to explore Ayurvedic remedies</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modals -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Login</h2>
+            <form class="login-form" onsubmit="handleLogin(event)">
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+                <p style="text-align: center;">
+                    Don't have an account? 
+                    <a href="#" onclick="switchModal('loginModal', 'signupModal')">Sign Up</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('signupModal')">&times;</span>
+            <h2>Sign Up</h2>
+            <form class="signup-form" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <input type="text" placeholder="First Name" required>
+                    <input type="text" placeholder="Last Name" required>
+                </div>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <input type="password" placeholder="Confirm Password" required>
+                <button type="submit">Sign Up</button>
+                <p style="text-align: center;">
+                    Already have an account? 
+                    <a href="#" onclick="switchModal('signupModal', 'loginModal')">Login</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <div id="serviceModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('serviceModal')">&times;</span>
+            <div id="serviceDetails" class="service-details">
+                <!-- Content will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot -->
+    <div class="chat-bot-button" onclick="toggleChat()">
+        <i class="fas fa-comments" style="font-size: 28px; color: white;"></i>
+    </div>
+
+    <div class="chat-container" id="chatContainer">
+        <div class="chat-header">
+            <div>
+                <i class="fas fa-robot"></i>
+                MediBot Assistant
+            </div>
+            <i class="fas fa-times" onclick="toggleChat()" style="cursor: pointer;"></i>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">
+                👋 Hello! I'm your MediBot assistant. How can I help you with your healthcare needs today?
+            </div>
+        </div>
+        <div class="chat-input">
+            <div class="input-container">
+                <input 
+                    type="text" 
+                    id="userInput" 
+                    placeholder="Ask me about health, symptoms, or medical advice..." 
+                    onkeypress="handleKeyPress(event)"
+                >
+                <button onclick="sendMessage()" class="send-button">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="quick-actions">
+                <button class="action-btn" onclick="setInput('Emergency symptoms')">
+                    <i class="fas fa-ambulance"></i> Emergency
+                </button>
+                <button class="action-btn" onclick="setInput('Common symptoms')">
+                    <i class="fas fa-stethoscope"></i> Symptoms
+                </button>
+                <button class="action-btn" onclick="setInput('Medicine information')">
+                    <i class="fas fa-pills"></i> Medicines
+                </button>
+                <button class="action-btn" onclick="setInput('Find nearest hospital')">
+                    <i class="fas fa-hospital"></i> Hospitals
+                </button>
+            </div>
+            <div class="suggestion-chips">
+                <!-- Dynamic suggestions will be added here -->
+            </div>
+        </div>
+    </div>
+    <script>
+        // Create floating shapes
+        function createShapes() {
+            const shapes = document.querySelector('.floating-shapes');
+            const numberOfShapes = 15;
+
+            for (let i = 0; i < numberOfShapes; i++) {
+                const shape = document.createElement('div');
+                shape.classList.add('shape');
+                
+                // Random size between 20px and 100px
+                const size = Math.random() * 80 + 20;
+                shape.style.width = `${size}px`;
+                shape.style.height = `${size}px`;
+                
+                // Random position
+                shape.style.left = `${Math.random() * 100}%`;
+                shape.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration between 15s and 30s
+                const duration = Math.random() * 15 + 15;
+                shape.style.animationDuration = `${duration}s`;
+                
+                // Random delay
+                shape.style.animationDelay = `${Math.random() * -30}s`;
+                
+                shapes.appendChild(shape);
+            }
+        }
+
+        // Initialize floating shapes
+        createShapes();
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function switchModal(closeModalId, openModalId) {
+            closeModal(closeModalId);
+            openModal(openModalId);
+        }
+
+        // Authentication handlers
+        function handleLogin(event) {
+            event.preventDefault();
+            const form = event.target;
+            const email = form.querySelector('input[type="email"]').value;
+            const password = form.querySelector('input[type="password"]').value;
+            
+            if (email && password) {
+                alert('Login successful!');
+                closeModal('loginModal');
+                
+                // Update the auth buttons to show logged-in state
+                document.querySelector('.auth-buttons').innerHTML = `
+                    <span style="color: white; padding: 5px 15px;">Welcome, ${email}</span>
+                    <a href="#" class="login-btn" onclick="handleLogout()">Logout</a>
+                `;
+            }
+        }
+
+        function handleLogout() {
+            // Reset the auth buttons to original state
+            document.querySelector('.auth-buttons').innerHTML = `
+                <a href="#" class="login-btn" onclick="openModal('loginModal')">
+                    <i class="fas fa-user"></i> Login
+                </a>
+                <a href="#" class="signup-btn" onclick="openModal('signupModal')">
+                    <i class="fas fa-user-plus"></i> Sign Up
+                </a>
+            `;
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            const form = event.target;
+            const firstName = form.querySelector('input[placeholder="First Name"]').value;
+            const lastName = form.querySelector('input[placeholder="Last Name"]').value;
+            const email = form.querySelector('input[type="email"]').value;
+            const password = form.querySelector('input[type="password"]').value;
+            const confirmPassword = form.querySelectorAll('input[type="password"]')[1].value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            if (firstName && lastName && email && password) {
+                alert('Sign up successful! Please log in.');
+                closeModal('signupModal');
+                openModal('loginModal');
+            }
+        }
+
+        // Chatbot functions
+        function toggleChat() {
+            const chatContainer = document.getElementById('chatContainer');
+            chatContainer.style.display = chatContainer.style.display === 'none' || chatContainer.style.display === '' 
+                ? 'flex' 
+                : 'none';
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const userInput = document.getElementById('userInput');
+            const message = userInput.value.trim();
+            
+            if (message === '') return;
+
+            addMessage(message, 'user-message');
+            userInput.value = '';
+
+            setTimeout(() => {
+                const botResponse = generateBotResponse(message);
+                addMessage(botResponse, 'bot-message');
+            }, 1000);
+        }
+
+        function addMessage(message, className) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${className}`;
+            
+            if (className === 'bot-message') {
+                messageDiv.innerHTML = formatBotResponse(message);
+            } else {
+                messageDiv.textContent = message;
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function generateBotResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            const bulletPoint = "• ";
+            const subBulletPoint = "  ◦ ";
+
+            // Emergency Hospital Response
+            if (message.includes('emergency') || message.includes('hospital')) {
+                return `🏥 Emergency Hospital Services:
+
+${bulletPoint}Types of Emergency Care:
+${subBulletPoint}<a href="https://hospital-data-hazel.vercel.app/" style="color: #4ECDC4;">24/7 Emergency Rooms</a>
+${subBulletPoint}<a href="https://hospital-data-hazel.vercel.app/" style="color: #4ECDC4;">Trauma Centers</a>
+${subBulletPoint}<a href="https://hospital-data-hazel.vercel.app/" style="color: #4ECDC4;">Urgent Care Centers</a>
+${subBulletPoint}<a href="https://hospital-data-hazel.vercel.app/" style="color: #4ECDC4;">Emergency Ambulance Services</a>
+
+${bulletPoint}When to Visit Emergency:
+${subBulletPoint}Severe chest pain
+${subBulletPoint}Difficulty breathing
+${subBulletPoint}Severe injuries/trauma
+${subBulletPoint}Stroke symptoms
+${subBulletPoint}Severe allergic reactions
+
+⚠️ For immediate emergency: Call 911`;
+            }
+
+            // Doctors Directory
+            if (message.includes('doctor') || message.includes('specialist')) {
+                return `👨‍⚕️ Medical Specialists:
+
+${bulletPoint}Find Specialists:
+${subBulletPoint}<a href="https://medi-doctor-zeta.vercel.app/" style="color: #4ECDC4;">Cardiologists</a>
+${subBulletPoint}<a href="https://medi-doctor-zeta.vercel.app/" style="color: #4ECDC4;">Neurologists</a>
+${subBulletPoint}<a href="https://medi-doctor-zeta.vercel.app/" style="color: #4ECDC4;">Pediatricians</a>
+${subBulletPoint}<a href="https://medi-doctor-zeta.vercel.app/" style="color: #4ECDC4;">Orthopedics</a>
+${subBulletPoint}<a href="https://medi-doctor-zeta.vercel.app/" style="color: #4ECDC4;">Dermatologists</a>
+
+${bulletPoint}Appointment Types:
+${subBulletPoint}Regular Check-ups
+${subBulletPoint}Specialist Consultations
+${subBulletPoint}Follow-up Visits
+${subBulletPoint}Virtual Consultations`;
+            }
+
+            // Medical Equipment
+            if (message.includes('equipment') || message.includes('medical devices')) {
+                return `🏥 Medical Equipment:
+
+${bulletPoint}Available Equipment:
+${subBulletPoint}<a href="https://medieq-kc1a.vercel.app/" style="color: #4ECDC4;">Monitoring Devices</a>
+${subBulletPoint}<a href="https://medieq-kc1a.vercel.app/" style="color: #4ECDC4;">Mobility Aids</a>
+${subBulletPoint}<a href="https://medieq-kc1a.vercel.app/" style="color: #4ECDC4;">First Aid Supplies</a>
+${subBulletPoint}<a href="https://medieq-kc1a.vercel.app/" style="color: #4ECDC4;">Home Care Equipment</a>
+
+${bulletPoint}Rental Services Available
+${bulletPoint}Purchase Options
+${bulletPoint}Maintenance Services`;
+            }
+
+            // Ayurveda
+            if (message.includes('ayurveda') || message.includes('herbal')) {
+                return `🌿 Ayurvedic Treatment:
+
+${bulletPoint}Services:
+${subBulletPoint}<a href="https://ayurveda-sooty.vercel.app/" style="color: #4ECDC4;">Herbal Medicines</a>
+${subBulletPoint}<a href="https://ayurveda-sooty.vercel.app/" style="color: #4ECDC4;">Panchakarma</a>
+${subBulletPoint}<a href="https://ayurveda-sooty.vercel.app/" style="color: #4ECDC4;">Yoga & Meditation</a>
+${subBulletPoint}<a href="https://ayurveda-sooty.vercel.app/" style="color: #4ECDC4;">Diet & Lifestyle</a>
+
+${bulletPoint}Treatments Available:
+${subBulletPoint}Customized herb combinations
+${subBulletPoint}Therapeutic massages
+${subBulletPoint}Dietary consultations
+${subBulletPoint}Lifestyle counseling`;
+            }
+
+            // Diet Planning
+            if (message.includes('diet') || message.includes('nutrition')) {
+                return `🥗 Diet Planning:
+
+${bulletPoint}Services:
+${subBulletPoint}<a href="https://health-chat-bot-1.vercel.app/" style="color: #4ECDC4;">Personalized Diet Plans</a>
+${subBulletPoint}<a href="https://health-chat-bot-1.vercel.app/" style="color: #4ECDC4;">Nutritional Assessment</a>
+${subBulletPoint}<a href="https://health-chat-bot-1.vercel.app/" style="color: #4ECDC4;">Diet Consultations</a>
+${subBulletPoint}<a href="https://health-chat-bot-1.vercel.app/" style="color: #4ECDC4;">Meal Planning</a>
+
+${bulletPoint}Special Diet Plans:
+${subBulletPoint}Weight Management
+${subBulletPoint}Diabetes Control
+${subBulletPoint}Heart Healthy
+${subBulletPoint}Sports Nutrition`;
+            }
+
+            // Medication Reminder
+            if (message.includes('medication') || message.includes('medicine reminder')) {
+                return `💊 Medication Management:
+
+${bulletPoint}Services:
+${subBulletPoint}<a href="https://timer-eosin-nine.vercel.app/" style="color: #4ECDC4;">Set Medication Reminders</a>
+${subBulletPoint}<a href="https://timer-eosin-nine.vercel.app/" style="color: #4ECDC4;">Track Medications</a>
+${subBulletPoint}<a href="https://timer-eosin-nine.vercel.app/" style="color: #4ECDC4;">Dosage Schedule</a>
+${subBulletPoint}<a href="https://timer-eosin-nine.vercel.app/" style="color: #4ECDC4;">Refill Reminders</a>
+
+${bulletPoint}Features:
+${subBulletPoint}Multiple medication tracking
+${subBulletPoint}Customizable reminders
+${subBulletPoint}Medication history
+${subBulletPoint}Share with caregivers`;
+            }
+
+            // Disease Information
+            if (message.includes('disease') || message.includes('condition')) {
+                return `📝 Disease Information:
+
+${bulletPoint}Common Diseases:
+${subBulletPoint}<a href="#" onclick="setInput('Diabetes')" style="color: #4ECDC4;">Diabetes</a>
+${subBulletPoint}<a href="#" onclick="setInput('Hypertension')" style="color: #4ECDC4;">Hypertension</a>
+${subBulletPoint}<a href="#" onclick="setInput('Asthma')" style="color: #4ECDC4;">Asthma</a>
+${subBulletPoint}<a href="#" onclick="setInput('Arthritis')" style="color: #4ECDC4;">Arthritis</a>
+${subBulletPoint}<a href="#" onclick="setInput('Heart Disease')" style="color: #4ECDC4;">Heart Disease</a>
+${subBulletPoint}<a href="#" onclick="setInput('Fever')" style="color: #4ECDC4;">Fever</a>
+${subBulletPoint}<a href="#" onclick="setInput('Common Cold')" style="color: #4ECDC4;">Common Cold</a>
+${subBulletPoint}<a href="#" onclick="setInput('Allergies')" style="color: #4ECDC4;">Allergies</a>
+
+${bulletPoint}Dangerous Conditions:
+${subBulletPoint}<a href="#" onclick="setInput('Gangrene')" style="color: #4ECDC4;">Gangrene</a>
+${subBulletPoint}<a href="#" onclick="setInput('Sepsis')" style="color: #4ECDC4;">Sepsis</a>
+${subBulletPoint}<a href="#" onclick="setInput('Meningitis')" style="color: #4ECDC4;">Meningitis</a>
+${subBulletPoint}<a href="#" onclick="setInput('Tetanus')" style="color: #4ECDC4;">Tetanus</a>
+${subBulletPoint}<a href="#" onclick="setInput('Rabies')" style="color: #4ECDC4;">Rabies</a>
+${subBulletPoint}<a href="#" onclick="setInput('Necrotizing Fasciitis')" style="color: #4ECDC4;">Necrotizing Fasciitis</a>
+${subBulletPoint}<a href="#" onclick="setInput('Ebola')" style="color: #4ECDC4;">Ebola</a>
+
+Please ask about any specific condition for detailed information.`;
+            }
+
+            // Diabetes
+            if (message.includes('diabetes')) {
+                return `💉 Diabetes - Managing Your Blood Sugar:
+
+${bulletPoint}Types:
+${subBulletPoint}Type 1
+${subBulletPoint}Type 2
+${subBulletPoint}Gestational
+
+${bulletPoint}Common Symptoms:
+${subBulletPoint}Frequent urination
+${subBulletPoint}Excessive thirst
+${subBulletPoint}Fatigue
+${subBulletPoint}Blurry vision
+${subBulletPoint}Slow healing wounds
+
+${bulletPoint}Management Strategies:
+${subBulletPoint}Regular exercise
+${subBulletPoint}Balanced diet
+${subBulletPoint}Medication as prescribed
+${subBulletPoint}Regular check-ups
+${subBulletPoint}Blood sugar monitoring
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Severe symptoms
+${subBulletPoint}Uncontrolled blood sugar
+${subBulletPoint}Complications (heart disease, kidney disease, etc.)
+
+${bulletPoint}Emergency Indicators:
+${subBulletPoint}Severe hypoglycemia (low blood sugar)
+${subBulletPoint}Diabetic ketoacidosis (high blood sugar)
+
+${bulletPoint}Prevention Tips:
+${subBulletPoint}Maintain a healthy weight
+${subBulletPoint}Regular physical activity
+${subBulletPoint}Balanced diet
+${subBulletPoint}Regular screenings
+${subBulletPoint}Manage stress levels`;
+            }
+
+            // Hypertension
+            if (message.includes('hypertension') || message.includes('blood pressure')) {
+                return `🩸 Hypertension - Controlling Your Blood Pressure:
+
+${bulletPoint}Different Stages:
+${subBulletPoint}Normal (<120/80)
+${subBulletPoint}Elevated (120-129/<80)
+${subBulletPoint}Stage 1 Hypertension (130-139/80-89)
+${subBulletPoint}Stage 2 Hypertension (140/90 or higher)
+${subBulletPoint}Hypertensive crisis (systolic >180 or diastolic >120)
+
+${bulletPoint}Common Symptoms:
+${subBulletPoint}Headache
+${subBulletPoint}Dizziness
+${subBulletPoint}Nosebleeds
+${subBulletPoint}Shortness of breath
+${subBulletPoint}Chest pain
+
+${bulletPoint}Management Strategies:
+${subBulletPoint}Lifestyle changes (diet, exercise, weight loss)
+${subBulletPoint}Medication as prescribed
+${subBulletPoint}Regular check-ups
+${subBulletPoint}Blood pressure monitoring
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Severe symptoms
+${subBulletPoint}Uncontrolled blood pressure
+${subBulletPoint}Complications (stroke, heart attack, kidney disease, etc.)
+
+${bulletPoint}Emergency Indicators:
+${subBulletPoint}Severe hypertensive crisis
+${subBulletPoint}Sudden onset of symptoms
+
+${bulletPoint}Prevention Tips:
+${subBulletPoint}Healthy diet
+${subBulletPoint}Regular exercise
+${subBulletPoint}Maintain a healthy weight
+${subBulletPoint}Limit alcohol consumption
+${subBulletPoint}Manage stress levels`;
+            }
+
+            // Asthma
+            if (message.includes('asthma')) {
+                return `💨 Asthma - Managing Your Breathing:
+
+${bulletPoint}Respiratory Condition:
+${subBulletPoint}Chronic inflammation of airways
+${subBulletPoint}Narrowed and swollen airways
+${subBulletPoint}Increased mucus production
+
+${bulletPoint}Common Symptoms:
+${subBulletPoint}Wheezing
+${subBulletPoint}Coughing
+${subBulletPoint}Shortness of breath
+${subBulletPoint}Chest tightness
+${subBulletPoint}Nighttime symptoms
+
+${bulletPoint}Management Strategies:
+${subBulletPoint}Avoid triggers (allergens, irritants, smoke)
+${subBulletPoint}Use inhalers as prescribed
+${subBulletPoint}Regular check-ups
+${subBulletPoint}Asthma action plan
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Severe symptoms
+${subBulletPoint}Difficulty breathing
+${subBulletPoint}Blue lips or fingernails
+
+${bulletPoint}Emergency Indicators:
+${subBulletPoint}Sudden worsening of symptoms
+${subBulletPoint}Loss of consciousness
+
+${bulletPoint}Prevention Tips:
+${subBulletPoint}Avoid known triggers
+${subBulletPoint}Regular exercise
+${subBulletPoint}Maintain a healthy weight
+${subBulletPoint}Avoid smoking
+${subBulletPoint}Manage stress levels`;
+            }
+
+            // Arthritis
+            if (message.includes('arthritis')) {
+                return `🦵 Arthritis - Managing Joint Pain:
+
+${bulletPoint}Types:
+${subBulletPoint}Osteoarthritis (wear and tear)
+${subBulletPoint}Rheumatoid Arthritis (autoimmune)
+${subBulletPoint}Psoriatic Arthritis (skin condition)
+${subBulletPoint}Gout (uric acid buildup)
+
+${bulletPoint}Common Symptoms:
+${subBulletPoint}Joint pain and stiffness
+${subBulletPoint}Swelling
+${subBulletPoint}Redness
+${subBulletPoint}Limited range of motion
+
+${bulletPoint}Management Strategies:
+${subBulletPoint}Exercise (gentle, low-impact)
+${subBulletPoint}Heat/cold therapy
+${subBulletPoint}Medication as prescribed
+${subBulletPoint}Regular check-ups
+${subBulletPoint}Lifestyle modifications
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Severe pain
+${subBulletPoint}Inability to move joints
+${subBulletPoint}Fever or infection
+
+${bulletPoint}Emergency Indicators:
+${subBulletPoint}Sudden onset of symptoms
+${subBulletPoint}Joint deformity
+
+${bulletPoint}Prevention Tips:
+${subBulletPoint}Maintain a healthy weight
+${subBulletPoint}Regular exercise
+${subBulletPoint}Avoid repetitive joint injuries
+${subBulletPoint}Maintain good posture
+${subBulletPoint}Manage stress levels`;
+            }
+
+            // Heart Disease
+            if (message.includes('heart disease')) {
+                return `🫀 Heart Disease - Protecting Your Heart:
+
+${bulletPoint}Types:
+${subBulletPoint}Coronary Artery Disease (CAD)
+${subBulletPoint}Heart Failure
+${subBulletPoint}Arrhythmia
+${subBulletPoint}Valve Disease
+
+${bulletPoint}Common Symptoms:
+${subBulletPoint}Chest pain or discomfort
+${subBulletPoint}Shortness of breath
+${subBulletPoint}Fatigue
+${subBulletPoint}Irregular heartbeat
+${subBulletPoint}Swelling in legs or abdomen
+
+${bulletPoint}Management Strategies:
+${subBulletPoint}Medication as prescribed
+${subBulletPoint}Healthy lifestyle changes
+${subBulletPoint}Regular check-ups
+${subBulletPoint}Heart-healthy diet
+${subBulletPoint}Exercise program
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Severe chest pain
+${subBulletPoint}Shortness of breath at rest
+${subBulletPoint}Sudden dizziness or fainting
+
+${bulletPoint}Emergency Indicators:
+${subBulletPoint}Chest pain that radiates to jaw or arm
+${subBulletPoint}Sudden onset of shortness of breath
+${subBulletPoint}Unstable angina
+
+${bulletPoint}Prevention Tips:
+${subBulletPoint}Healthy diet
+${subBulletPoint}Regular exercise
+${subBulletPoint}Maintain a healthy weight
+${subBulletPoint}Limit alcohol consumption
+${subBulletPoint}Manage stress levels
+${subBulletPoint}Regular screenings
+${subBulletPoint}Quit smoking`;
+            }
+
+            // Fever
+            if (message.includes('fever')) {
+                return `🌡️ Fever - Managing Body Temperature:
+
+${bulletPoint}General Fever Management:
+${subBulletPoint}Rest
+${subBulletPoint}Stay hydrated
+${subBulletPoint}Over-the-counter pain relievers
+${subBulletPoint}Cooling measures (sponging, lukewarm bath)
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Fever above 105°F (40.5°C)
+${subBulletPoint}Fever lasting more than 3 days
+${subBulletPoint}Severe symptoms (confusion, seizures)
+
+${bulletPoint}Emergency Indicators:
+${subBulletPoint}High fever with severe symptoms
+${subBulletPoint}Fever in infants or young children
+
+${bulletPoint}Prevention Tips:
+${subBulletPoint}Stay hydrated
+${subBulletPoint}Avoid close contact with sick people
+${subBulletPoint}Wash hands frequently
+${subBulletPoint}Cover mouth and nose when coughing or sneezing
+${subBulletPoint}Avoid sharing personal items`;
+            }
+
+            // Common Cold
+            if (message.includes('common cold') || message.includes('cold')) {
+                return `🤧 Common Cold - Overcoming Nasal Congestion:
+
+${bulletPoint}Symptoms:
+${subBulletPoint}Runny or stuffy nose
+${subBulletPoint}Sneezing
+${subBulletPoint}Cough
+${subBulletPoint}Sore throat
+${subBulletPoint}Mild body aches
+
+${bulletPoint}Management Strategies:
+${subBulletPoint}Rest
+${subBulletPoint}Stay hydrated
+${subBulletPoint}Over-the-counter decongestants
+${subBulletPoint}Humidifier or steam inhalation
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Fever
+${subBulletPoint}Difficulty breathing
+${subBulletPoint}Persistent symptoms for more than 10 days
+
+${bulletPoint}Emergency Indicators:
+${subBulletPoint}Severe symptoms
+${subBulletPoint}Dehydration
+
+${bulletPoint}Prevention Tips:
+${subBulletPoint}Wash hands frequently
+${subBulletPoint}Avoid close contact with sick people
+${subBulletPoint}Cover mouth and nose when coughing or sneezing
+${subBulletPoint}Get vaccinated for flu and COVID-19
+${subBulletPoint}Stay hydrated`;
+            }
+
+            // Allergies
+            if (message.includes('allergies')) {
+                return `🤧 Allergies - Managing Sensitivity Reactions:
+
+${bulletPoint}Types:
+${subBulletPoint}Seasonal allergies
+${subBulletPoint}Food allergies
+${subBulletPoint}Pet allergies
+${subBulletPoint}Insect sting allergies
+${subBulletPoint}Latex allergies
+
+${bulletPoint}Common Symptoms:
+${subBulletPoint}Sneezing
+${subBulletPoint}Itchy, watery eyes
+${subBulletPoint}Runny nose
+${subBulletPoint}Coughing
+${subBulletPoint}Hives or rash
+${subBulletPoint}Swelling (face, lips, tongue)
+
+${bulletPoint}Management Strategies:
+${subBulletPoint}Avoid allergens
+${subBulletPoint}Antihistamines
+${subBulletPoint}Decongestants
+${subBulletPoint}Epinephrine for severe reactions
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Severe symptoms
+${subBulletPoint}Difficulty breathing
+${subBulletPoint}Swelling of the face or throat
+
+${bulletPoint}Emergency Indicators:
+${subBulletPoint}Anaphylaxis (severe allergic reaction)
+
+${bulletPoint}Prevention Tips:
+${subBulletPoint}Avoid known allergens
+${subBulletPoint}Regular allergy testing
+${subBulletPoint}Avoid smoking
+${subBulletPoint}Keep pets clean and groomed
+${subBulletPoint}Avoid insect stings`;
+            }
+
+            // Gangrene
+            if (message.includes('gangrene')) {
+                return `⚠️ Gangrene - Serious Condition:
+
+${bulletPoint}Types:
+${subBulletPoint}Dry Gangrene
+${subBulletPoint}Wet Gangrene
+${subBulletPoint}Gas Gangrene
+${subBulletPoint}Internal Gangrene
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Skin discoloration (black/green/brown)
+${subBulletPoint}Severe pain followed by loss of sensation
+${subBulletPoint}Skin becomes cold and numb
+${subBulletPoint}Foul-smelling discharge
+${subBulletPoint}Swelling and blistering
+
+⚠️ IMMEDIATE MEDICAL ATTENTION REQUIRED
+${bulletPoint}This is a medical emergency
+${bulletPoint}Can lead to amputation if untreated
+${bulletPoint}Call emergency services immediately`;
+            }
+
+            // Sepsis
+            if (message.includes('sepsis')) {
+                return `🚨 Sepsis - Life-Threatening Condition:
+
+${bulletPoint}Warning Signs (TIME):
+${subBulletPoint}Temperature - Higher/lower than normal
+${subBulletPoint}Infection - Signs of infection
+${subBulletPoint}Mental decline - Confusion/sleepy
+${subBulletPoint}Extremely ill - Severe pain/discomfort
+
+${bulletPoint}High Risk Groups:
+${subBulletPoint}Elderly people
+${subBulletPoint}Infants
+${subBulletPoint}People with weakened immune systems
+${subBulletPoint}People with chronic conditions
+
+⚠️ REQUIRES IMMEDIATE EMERGENCY CARE
+${bulletPoint}Call emergency services immediately
+${bulletPoint}Every hour delay increases mortality risk`;
+            }
+
+            // Meningitis
+            if (message.includes('meningitis')) {
+                return `🧠 Meningitis - Medical Emergency:
+
+${bulletPoint}Critical Symptoms:
+${subBulletPoint}Severe headache
+${subBulletPoint}Stiff neck
+${subBulletPoint}High fever
+${subBulletPoint}Confusion/altered consciousness
+${subBulletPoint}Sensitivity to light
+${subBulletPoint}Purple/red rash (doesn't fade under pressure)
+
+${bulletPoint}Types:
+${subBulletPoint}Bacterial (most dangerous)
+${subBulletPoint}Viral
+${subBulletPoint}Fungal
+${subBulletPoint}Parasitic
+
+⚠️ SEEK IMMEDIATE MEDICAL ATTENTION
+${bulletPoint}Can be fatal within hours
+${bulletPoint}Early treatment is crucial`;
+            }
+
+            // Tetanus
+            if (message.includes('tetanus')) {
+                return `💉 Tetanus - Severe Infection:
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Jaw cramping ("lockjaw")
+${subBulletPoint}Muscle stiffness/spasms
+${subBulletPoint}Difficulty swallowing
+${subBulletPoint}High fever
+${subBulletPoint}Sweating
+${subBulletPoint}Rapid heartbeat
+
+${bulletPoint}Risk Factors:
+${subBulletPoint}Deep wounds
+${subBulletPoint}Burns
+${subBulletPoint}Animal bites
+${subBulletPoint}Rusty metal injuries
+
+⚠️ PREVENTION & EMERGENCY:
+${bulletPoint}Keep tetanus shots up to date
+${bulletPoint}Seek immediate care for suspected cases
+${bulletPoint}Clean all wounds properly`;
+            }
+
+            // Rabies
+            if (message.includes('rabies')) {
+                return `🦠 Rabies - Fatal Disease:
+
+${bulletPoint}Early Symptoms:
+${subBulletPoint}Fever
+${subBulletPoint}Headache
+${subBulletPoint}Anxiety
+${subBulletPoint}Confusion
+${subBulletPoint}Hyperactivity
+
+${bulletPoint}Advanced Symptoms:
+${subBulletPoint}Hydrophobia (fear of water)
+${subBulletPoint}Hallucinations
+${subBulletPoint}Paralysis
+${subBulletPoint}Difficulty swallowing
+
+⚠️ IMMEDIATE ACTION REQUIRED:
+${bulletPoint}Seek treatment immediately after exposure
+${bulletPoint}Clean wound thoroughly
+${bulletPoint}Get post-exposure prophylaxis
+${bulletPoint}Almost always fatal if symptoms develop`;
+            }
+
+            // Necrotizing Fasciitis
+            if (message.includes('necrotizing fasciitis')) {
+                return `🚨 Necrotizing Fasciitis - Flesh-Eating Disease:
+
+${bulletPoint}Early Signs:
+${subBulletPoint}Severe pain
+${subBulletPoint}Red/warm skin
+${subBulletPoint}Fever
+${subBulletPoint}Fatigue
+
+${bulletPoint}Advanced Signs:
+${subBulletPoint}Black spots on skin
+${subBulletPoint}Blisters/ulcers
+${subBulletPoint}Skin breakdown
+${subBulletPoint}Toxic shock symptoms
+
+⚠️ EXTREME EMERGENCY:
+${bulletPoint}Rapidly spreading infection
+${bulletPoint}Can be fatal within days
+${bulletPoint}Requires immediate surgical intervention
+${bulletPoint}Call emergency services immediately`;
+            }
+
+            // Ebola
+            if (message.includes('ebola')) {
+                return `🦠 Ebola Virus Disease:
+
+${bulletPoint}Initial Symptoms:
+${subBulletPoint}Sudden fever
+${subBulletPoint}Severe headache
+${subBulletPoint}Muscle pain
+${subBulletPoint}Fatigue
+
+${bulletPoint}Progressive Symptoms:
+${subBulletPoint}Vomiting and diarrhea
+${subBulletPoint}Internal/external bleeding
+${subBulletPoint}Organ failure
+${subBulletPoint}Rash
+
+⚠️ HIGHLY INFECTIOUS:
+${bulletPoint}Isolate suspected cases
+${bulletPoint}Contact health authorities immediately
+${bulletPoint}Follow strict infection control
+${bulletPoint}High mortality rate`;
+            }
+
+            // Dangerous Conditions
+            if (message.includes('dangerous') || message.includes('severe')) {
+                return `⚠️ Dangerous Medical Conditions:
+
+${bulletPoint}Life-Threatening Conditions:
+${subBulletPoint}Gangrene
+${subBulletPoint}Sepsis
+${subBulletPoint}Meningitis
+${subBulletPoint}Tetanus
+${subBulletPoint}Rabies
+${subBulletPoint}Necrotizing Fasciitis
+${subBulletPoint}Ebola
+
+Please ask about any specific condition for detailed information.
+
+⚠️ NOTE: These conditions require immediate medical attention.
+Call emergency services if you suspect any of these conditions.`;
+            }
+
+            // STDs
+            if (message.includes('std') || message.includes('sti') || message.includes('sexual disease')) {
+                return `🏥 Sexually Transmitted Infections (STIs):
+
+${bulletPoint}Common STIs:
+${subBulletPoint}HIV/AIDS
+${subBulletPoint}HPV (Human Papillomavirus)
+${subBulletPoint}Hepatitis B
+${subBulletPoint}Herpes
+${subBulletPoint}Chlamydia
+${subBulletPoint}Gonorrhea
+${subBulletPoint}Syphilis
+
+${bulletPoint}General Prevention:
+${subBulletPoint}Practice safe sex
+${subBulletPoint}Regular health screenings
+${subBulletPoint}Vaccination (where available)
+${subBulletPoint}Open communication with partners
+
+${bulletPoint}When to Seek Care:
+${subBulletPoint}Unusual discharge
+${subBulletPoint}Pain or burning sensation
+${subBulletPoint}Sores or rashes
+${subBulletPoint}After potential exposure
+
+⚠️ Important Notes:
+${bulletPoint}Many STIs are asymptomatic
+${bulletPoint}Early detection is crucial
+${bulletPoint}All STIs are treatable
+${bulletPoint}Some are curable with medication
+${bulletPoint}Confidential testing available
+
+For specific information, ask about any particular condition.`;
+            }
+
+            // HIV/AIDS
+            if (message.includes('hiv') || message.includes('aids')) {
+                return `🏥 HIV/AIDS Information:
+
+${bulletPoint}Early HIV Symptoms:
+${subBulletPoint}Fever and chills
+${subBulletPoint}Severe fatigue
+${subBulletPoint}Muscle aches
+${subBulletPoint}Sore throat
+${subBulletPoint}Swollen lymph nodes
+
+${bulletPoint}Prevention:
+${subBulletPoint}Safe sex practices
+${subBulletPoint}Regular testing
+${subBulletPoint}PrEP (Pre-Exposure Prophylaxis)
+${subBulletPoint}PEP (Post-Exposure Prophylaxis)
+
+${bulletPoint}Treatment Options:
+${subBulletPoint}Antiretroviral therapy
+${subBulletPoint}Regular medical monitoring
+${subBulletPoint}Immune system support
+${subBulletPoint}Lifestyle modifications
+
+⚠️ Important:
+${bulletPoint}Early detection is crucial
+${bulletPoint}Treatment is highly effective
+${bulletPoint}Normal lifespan possible with care
+${bulletPoint}Confidential testing available`;
+            }
+
+            // Herpes
+            if (message.includes('herpes')) {
+                return `🏥 Herpes Information:
+
+${bulletPoint}Types:
+${subBulletPoint}HSV-1 (oral)
+${subBulletPoint}HSV-2 (genital)
+
+${bulletPoint}Symptoms:
+${subBulletPoint}Blisters or sores
+${subBulletPoint}Pain or itching
+${subBulletPoint}Flu-like symptoms
+${subBulletPoint}Burning sensation
+
+${bulletPoint}Management:
+${subBulletPoint}Antiviral medications
+${subBulletPoint}Pain management
+${subBulletPoint}Stress reduction
+${subBulletPoint}Trigger avoidance
+
+⚠️ Important Notes:
+${bulletPoint}Very common condition
+${bulletPoint}Manageable with medication
+${bulletPoint}Avoid contact during outbreaks
+${bulletPoint}Discuss with healthcare provider`;
+            }
+
+            // Syphilis
+            if (message.includes('syphilis')) {
+                return `🏥 Syphilis Information:
+
+${bulletPoint}Stages:
+${subBulletPoint}Primary (painless sore)
+${subBulletPoint}Secondary (rash, fever)
+${subBulletPoint}Latent (no symptoms)
+${subBulletPoint}Tertiary (severe complications)
+
+${bulletPoint}Treatment:
+${subBulletPoint}Penicillin therapy
+${subBulletPoint}Regular monitoring
+${subBulletPoint}Partner notification
+${subBulletPoint}Follow-up testing
+
+⚠️ Important:
+${bulletPoint}Curable with early treatment
+${bulletPoint}Can be serious if untreated
+${bulletPoint}Regular testing recommended
+${bulletPoint}All partners should be tested`;
+            }
+
+            // HPV
+            if (message.includes('hpv')) {
+                return `🏥 HPV (Human Papillomavirus):
+
+${bulletPoint}Types:
+${subBulletPoint}Low-risk (warts)
+${subBulletPoint}High-risk (cancer risk)
+
+${bulletPoint}Prevention:
+${subBulletPoint}HPV vaccination
+${subBulletPoint}Regular screening
+${subBulletPoint}Safe sex practices
+${subBulletPoint}Regular check-ups
+
+${bulletPoint}Management:
+${subBulletPoint}Regular Pap smears
+${subBulletPoint}Wart treatment if needed
+${subBulletPoint}Cancer screening
+${subBulletPoint}Follow-up care
+
+⚠️ Important:
+${bulletPoint}Very common infection
+${bulletPoint}Often no symptoms
+${bulletPoint}Vaccination recommended
+${bulletPoint}Regular screening crucial`;
+            }
+
+            // Alzheimer's Disease
+            if (message.includes('alzheimer')) {
+                return `🧠 Alzheimer's Disease Information:
+
+${bulletPoint}Early Signs:
+${subBulletPoint}Memory loss
+${subBulletPoint}Difficulty planning/problem solving
+${subBulletPoint}Confusion with time/place
+${subBulletPoint}Problems with words
+${subBulletPoint}Poor judgment
+${subBulletPoint}Mood changes
+
+${bulletPoint}Risk Factors:
+${subBulletPoint}Age (65+)
+${subBulletPoint}Family history
+${subBulletPoint}Genetics
+${subBulletPoint}Head injuries
+${subBulletPoint}Heart disease
+${subBulletPoint}Poor sleep patterns
+
+${bulletPoint}Management:
+${subBulletPoint}Medications
+${subBulletPoint}Cognitive stimulation
+${subBulletPoint}Regular routine
+${subBulletPoint}Safe environment
+${subBulletPoint}Support groups
+${subBulletPoint}Caregiver support
+
+${bulletPoint}Prevention Tips:
+${subBulletPoint}Mental activities
+${subBulletPoint}Physical exercise
+${subBulletPoint}Healthy diet
+${subBulletPoint}Social engagement
+${subBulletPoint}Good sleep habits`;
+            }
+
+            // Tuberculosis (TB)
+            if (message.includes('tuberculosis') || message.includes('tb')) {
+                return `🫁 Tuberculosis (TB) Information:
+
+${bulletPoint}Symptoms:
+${subBulletPoint}Persistent cough (3+ weeks)
+${subBulletPoint}Chest pain
+${subBulletPoint}Blood in sputum
+${subBulletPoint}Weight loss
+${subBulletPoint}Night sweats
+${subBulletPoint}Fever
+${subBulletPoint}Fatigue
+
+${bulletPoint}Risk Factors:
+${subBulletPoint}Close contact with TB patients
+${subBulletPoint}Weakened immune system
+${subBulletPoint}Poor living conditions
+${subBulletPoint}Malnutrition
+${subBulletPoint}HIV/AIDS
+
+${bulletPoint}Treatment:
+${subBulletPoint}Antibiotics (6-9 months)
+${subBulletPoint}Regular monitoring
+${subBulletPoint}Completion of full course
+${subBulletPoint}Isolation during infectious period
+
+⚠️ Important:
+${bulletPoint}Highly contagious
+${bulletPoint}Complete treatment essential
+${bulletPoint}Regular follow-up needed`;
+            }
+
+            // Pneumonia
+            if (message.includes('pneumonia')) {
+                return `🫁 Pneumonia Information:
+
+${bulletPoint}Symptoms:
+${subBulletPoint}Chest pain
+${subBulletPoint}Difficulty breathing
+${subBulletPoint}High fever
+${subBulletPoint}Cough with phlegm
+${subBulletPoint}Fatigue
+${subBulletPoint}Confusion (elderly)
+
+${bulletPoint}Risk Groups:
+${subBulletPoint}Young children
+${subBulletPoint}Elderly (65+)
+${subBulletPoint}Smokers
+${subBulletPoint}Weakened immune system
+${subBulletPoint}Chronic conditions
+
+${bulletPoint}Treatment:
+${subBulletPoint}Antibiotics
+${subBulletPoint}Rest
+${subBulletPoint}Hydration
+${subBulletPoint}Fever management
+
+${bulletPoint}Prevention:
+${subBulletPoint}Vaccination
+${subBulletPoint}Good hygiene
+${subBulletPoint}No smoking
+${subBulletPoint}Healthy lifestyle`;
+            }
+
+            // Malaria
+            if (message.includes('malaria')) {
+                return `🦟 Malaria Information:
+
+${bulletPoint}Symptoms:
+${subBulletPoint}High fever
+${subBulletPoint}Chills
+${subBulletPoint}Sweating
+${subBulletPoint}Headache
+${subBulletPoint}Body aches
+${subBulletPoint}Nausea/vomiting
+
+${bulletPoint}Prevention:
+${subBulletPoint}Mosquito nets
+${subBulletPoint}Insect repellent
+${subBulletPoint}Protective clothing
+${subBulletPoint}Anti-malarial drugs
+${subBulletPoint}Avoid mosquito areas
+
+${bulletPoint}Treatment:
+${subBulletPoint}Anti-malarial medication
+${subBulletPoint}Supportive care
+${subBulletPoint}Hydration
+${subBulletPoint}Rest
+
+⚠️ Seek immediate care if symptoms appear`;
+            }
+
+            // Dengue
+            if (message.includes('dengue')) {
+                return `🦟 Dengue Fever Information:
+
+${bulletPoint}Symptoms:
+${subBulletPoint}High fever
+${subBulletPoint}Severe headache
+${subBulletPoint}Eye pain
+${subBulletPoint}Joint/muscle pain
+${subBulletPoint}Rash
+${subBulletPoint}Bleeding gums/nose
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Severe abdominal pain
+${subBulletPoint}Persistent vomiting
+${subBulletPoint}Rapid breathing
+${subBulletPoint}Blood in vomit
+${subBulletPoint}Fatigue/restlessness
+
+${bulletPoint}Prevention:
+${subBulletPoint}Mosquito control
+${subBulletPoint}Use repellents
+${subBulletPoint}Wear protective clothing
+${subBulletPoint}Remove standing water
+
+⚠️ Requires immediate medical attention`;
+            }
+
+            // Obesity
+            if (message.includes('obesity') || message.includes('weight')) {
+                return `⚖️ Obesity-Related Information:
+
+${bulletPoint}Health Risks:
+${subBulletPoint}Heart disease
+${subBulletPoint}Diabetes
+${subBulletPoint}High blood pressure
+${subBulletPoint}Joint problems
+${subBulletPoint}Sleep apnea
+${subBulletPoint}Mental health issues
+
+${bulletPoint}Management:
+${subBulletPoint}Healthy diet
+${subBulletPoint}Regular exercise
+${subBulletPoint}Behavior modification
+${subBulletPoint}Medical supervision
+${subBulletPoint}Support groups
+
+${bulletPoint}Treatment Options:
+${subBulletPoint}Lifestyle changes
+${subBulletPoint}Medication
+${subBulletPoint}Bariatric surgery
+${subBulletPoint}Counseling
+
+${bulletPoint}Prevention:
+${subBulletPoint}Balanced nutrition
+${subBulletPoint}Physical activity
+${subBulletPoint}Regular check-ups
+${subBulletPoint}Stress management`;
+            }
+
+            // Mental Health
+            if (message.includes('mental health') || message.includes('depression') || message.includes('anxiety')) {
+                return `🧠 Mental Health Information:
+
+${bulletPoint}Common Conditions:
+${subBulletPoint}Depression
+${subBulletPoint}Anxiety disorders
+${subBulletPoint}Bipolar disorder
+${subBulletPoint}PTSD
+${subBulletPoint}Eating disorders
+${subBulletPoint}Schizophrenia
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Persistent sadness
+${subBulletPoint}Excessive worrying
+${subBulletPoint}Social withdrawal
+${subBulletPoint}Sleep changes
+${subBulletPoint}Mood swings
+${subBulletPoint}Suicidal thoughts
+
+${bulletPoint}Treatment Options:
+${subBulletPoint}Therapy/counseling
+${subBulletPoint}Medication
+${subBulletPoint}Support groups
+${subBulletPoint}Lifestyle changes
+${subBulletPoint}Stress management
+
+${bulletPoint}Self-Help:
+${subBulletPoint}Regular exercise
+${subBulletPoint}Healthy diet
+${subBulletPoint}Good sleep habits
+${subBulletPoint}Social connections
+${subBulletPoint}Mindfulness/meditation
+
+⚠️ Seek professional help if needed
+${bulletPoint}Crisis Helpline: [Your Local Number]`;
+            }
+
+            // Childhood Diseases
+            if (message.includes('child') || message.includes('pediatric')) {
+                return `👶 Childhood Health Information:
+
+${bulletPoint}Common Conditions:
+${subBulletPoint}Measles
+${subBulletPoint}Chickenpox
+${subBulletPoint}Mumps
+${subBulletPoint}Whooping cough
+${subBulletPoint}Hand-foot-mouth disease
+
+${bulletPoint}Preventive Care:
+${subBulletPoint}Vaccinations
+${subBulletPoint}Regular check-ups
+${subBulletPoint}Good nutrition
+${subBulletPoint}Physical activity
+${subBulletPoint}Proper hygiene
+
+${bulletPoint}Development Milestones:
+${subBulletPoint}Physical growth
+${subBulletPoint}Motor skills
+${subBulletPoint}Language development
+${subBulletPoint}Social skills
+${subBulletPoint}Cognitive development
+
+⚠️ Consult pediatrician for:
+${bulletPoint}Missed milestones
+${bulletPoint}Unusual symptoms
+${bulletPoint}Behavioral changes`;
+            }
+
+            // Maternal Health
+            if (message.includes('maternal') || message.includes('pregnancy')) {
+                return `🤰 Maternal Health Information:
+
+${bulletPoint}Pregnancy Care:
+${subBulletPoint}Prenatal vitamins
+${subBulletPoint}Regular check-ups
+${subBulletPoint}Healthy diet
+${subBulletPoint}Safe exercise
+${subBulletPoint}Adequate rest
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Vaginal bleeding
+${subBulletPoint}Severe headaches
+${subBulletPoint}Vision changes
+${subBulletPoint}Reduced fetal movement
+${subBulletPoint}Contractions before 37 weeks
+
+${bulletPoint}Postpartum Care:
+${subBulletPoint}Physical recovery
+${subBulletPoint}Mental health
+${subBulletPoint}Breastfeeding support
+${subBulletPoint}Newborn care
+${subBulletPoint}Family planning
+
+⚠️ Emergency Signs:
+${bulletPoint}Severe pain
+${bulletPoint}Heavy bleeding
+${bulletPoint}High fever
+${bulletPoint}Thoughts of self-harm`;
+            }
+
+            // Update the main disease/conditions menu
+            if (message.includes('disease') || message.includes('condition')) {
+                return `🏥 Health Conditions Information:
+
+${bulletPoint}Chronic Conditions:
+${subBulletPoint}<a href="#" onclick="setInput('Alzheimer')" style="color: #4ECDC4;">Alzheimer's Disease</a>
+${subBulletPoint}<a href="#" onclick="setInput('Obesity')" style="color: #4ECDC4;">Obesity</a>
+
+${bulletPoint}Infectious Diseases:
+${subBulletPoint}<a href="#" onclick="setInput('Tuberculosis')" style="color: #4ECDC4;">Tuberculosis (TB)</a>
+${subBulletPoint}<a href="#" onclick="setInput('Pneumonia')" style="color: #4ECDC4;">Pneumonia</a>
+${subBulletPoint}<a href="#" onclick="setInput('Malaria')" style="color: #4ECDC4;">Malaria</a>
+${subBulletPoint}<a href="#" onclick="setInput('Dengue')" style="color: #4ECDC4;">Dengue Fever</a>
+
+${bulletPoint}Mental Health:
+${subBulletPoint}<a href="#" onclick="setInput('Mental Health')" style="color: #4ECDC4;">Mental Health Disorders</a>
+
+${bulletPoint}Special Categories:
+${subBulletPoint}<a href="#" onclick="setInput('Child')" style="color: #4ECDC4;">Childhood Diseases</a>
+${subBulletPoint}<a href="#" onclick="setInput('Maternal')" style="color: #4ECDC4;">Maternal Health</a>
+
+// ... (existing disease categories) ...
+
+${bulletPoint}Need help with something specific?
+${subBulletPoint}Type the condition name for more details
+${subBulletPoint}Ask about symptoms, treatments, or prevention`;
+            }
+
+            // Add this case in the generateBotResponse function, before the default response:
+            if (message.includes('cancer')) {
+                return `🎗️ Cancer Information:
+
+${bulletPoint}Common Types:
+${subBulletPoint}Breast Cancer
+${subBulletPoint}Lung Cancer
+${subBulletPoint}Colorectal Cancer
+${subBulletPoint}Prostate Cancer
+${subBulletPoint}Skin Cancer
+${subBulletPoint}Blood Cancer
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Unexplained weight loss
+${subBulletPoint}Unusual bleeding/bruising
+${subBulletPoint}Persistent cough/hoarseness
+${subBulletPoint}Changes in bowel/bladder habits
+${subBulletPoint}Unexplained pain
+${subBulletPoint}Unusual lumps/swelling
+${subBulletPoint}Changes in skin/moles
+
+${bulletPoint}Risk Factors:
+${subBulletPoint}Family history
+${subBulletPoint}Age
+${subBulletPoint}Lifestyle factors
+${subBulletPoint}Environmental exposure
+${subBulletPoint}Genetic mutations
+
+${bulletPoint}Prevention Tips:
+${subBulletPoint}Regular screenings
+${subBulletPoint}Healthy diet
+${subBulletPoint}Regular exercise
+${subBulletPoint}No smoking
+${subBulletPoint}Limited alcohol
+${subBulletPoint}Sun protection
+${subBulletPoint}Vaccinations (HPV, Hepatitis)
+
+${bulletPoint}Treatment Options:
+${subBulletPoint}Surgery
+${subBulletPoint}Chemotherapy
+${subBulletPoint}Radiation therapy
+${subBulletPoint}Immunotherapy
+${subBulletPoint}Targeted therapy
+${subBulletPoint}Hormone therapy
+
+⚠️ Important Notes:
+${bulletPoint}Early detection is crucial
+${bulletPoint}Regular check-ups recommended
+${bulletPoint}Consult doctor for any concerns
+${bulletPoint}Support groups available`;
+            }
+
+            // Also add cancer to the disease/conditions menu section:
+            if (message.includes('disease') || message.includes('condition')) {
+                return `🏥 Health Conditions Information:
+
+// ... existing categories ...
+
+${bulletPoint}Cancer Care:
+${subBulletPoint}<a href="#" onclick="setInput('Cancer')" style="color: #4ECDC4;">Cancer Information</a>
+
+// ... rest of the existing menu ...`;
+            }
+
+            // Add these cases for specific cancer types
+            if (message.includes('breast cancer')) {
+                return `🎗️ Breast Cancer Information:
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}New lump in breast/armpit
+${subBulletPoint}Breast size/shape changes
+${subBulletPoint}Skin changes/dimpling
+${subBulletPoint}Nipple discharge/inversion
+${subBulletPoint}Breast pain/discomfort
+
+${bulletPoint}Risk Factors:
+${subBulletPoint}Gender (more common in women)
+${subBulletPoint}Age (risk increases with age)
+${subBulletPoint}Family history
+${subBulletPoint}Genetic mutations (BRCA1/BRCA2)
+${subBulletPoint}Dense breast tissue
+
+${bulletPoint}Prevention:
+${subBulletPoint}Regular mammograms
+${subBulletPoint}Monthly self-exams
+${subBulletPoint}Healthy lifestyle
+${subBulletPoint}Maintain healthy weight
+${subBulletPoint}Limited alcohol consumption
+
+${bulletPoint}Treatment Options:
+${subBulletPoint}Surgery (lumpectomy/mastectomy)
+${subBulletPoint}Radiation therapy
+${subBulletPoint}Chemotherapy
+${subBulletPoint}Hormone therapy
+${subBulletPoint}Targeted therapy`;
+            }
+
+            if (message.includes('lung cancer')) {
+                return `🫁 Lung Cancer Information:
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Persistent cough
+${subBulletPoint}Chest pain
+${subBulletPoint}Shortness of breath
+${subBulletPoint}Hoarseness
+${subBulletPoint}Coughing up blood
+${subBulletPoint}Unexplained weight loss
+
+${bulletPoint}Risk Factors:
+${subBulletPoint}Smoking
+${subBulletPoint}Secondhand smoke exposure
+${subBulletPoint}Radon exposure
+${subBulletPoint}Family history
+${subBulletPoint}Air pollution
+
+${bulletPoint}Prevention:
+${subBulletPoint}Don't smoke/quit smoking
+${subBulletPoint}Avoid secondhand smoke
+${subBulletPoint}Test home for radon
+${subBulletPoint}Protect from carcinogens
+${subBulletPoint}Regular check-ups
+
+${bulletPoint}Treatment Options:
+${subBulletPoint}Surgery
+${subBulletPoint}Radiation therapy
+${subBulletPoint}Chemotherapy
+${subBulletPoint}Targeted therapy
+${subBulletPoint}Immunotherapy`;
+            }
+
+            if (message.includes('skin cancer')) {
+                return `🔬 Skin Cancer Information:
+
+${bulletPoint}Types:
+${subBulletPoint}Melanoma
+${subBulletPoint}Basal cell carcinoma
+${subBulletPoint}Squamous cell carcinoma
+
+${bulletPoint}Warning Signs (ABCDE):
+${subBulletPoint}Asymmetry
+${subBulletPoint}Border irregularity
+${subBulletPoint}Color variation
+${subBulletPoint}Diameter >6mm
+${subBulletPoint}Evolving size/shape/color
+
+${bulletPoint}Risk Factors:
+${subBulletPoint}UV exposure
+${subBulletPoint}Fair skin
+${subBulletPoint}History of sunburns
+${subBulletPoint}Family history
+${subBulletPoint}Multiple moles
+
+${bulletPoint}Prevention:
+${subBulletPoint}Use sunscreen (SPF 30+)
+${subBulletPoint}Avoid tanning beds
+${subBulletPoint}Wear protective clothing
+${subBulletPoint}Regular skin checks
+${subBulletPoint}Seek shade`;
+            }
+
+            if (message.includes('prostate cancer')) {
+                return `👨 Prostate Cancer Information:
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Difficulty urinating
+${subBulletPoint}Weak urine flow
+${subBulletPoint}Blood in urine
+${subBulletPoint}Erectile dysfunction
+${subBulletPoint}Bone pain
+
+${bulletPoint}Risk Factors:
+${subBulletPoint}Age (more common >50)
+${subBulletPoint}Race (higher in African men)
+${subBulletPoint}Family history
+${subBulletPoint}Obesity
+
+${bulletPoint}Prevention:
+${subBulletPoint}Regular screenings
+${subBulletPoint}Healthy diet
+${subBulletPoint}Regular exercise
+${subBulletPoint}Maintain healthy weight
+
+${bulletPoint}Treatment Options:
+${subBulletPoint}Active surveillance
+${subBulletPoint}Surgery
+${subBulletPoint}Radiation therapy
+${subBulletPoint}Hormone therapy
+${subBulletPoint}Chemotherapy`;
+            }
+
+            if (message.includes('blood cancer') || message.includes('leukemia')) {
+                return `🩸 Blood Cancer Information:
+
+${bulletPoint}Types:
+${subBulletPoint}Leukemia
+${subBulletPoint}Lymphoma
+${subBulletPoint}Multiple Myeloma
+
+${bulletPoint}Common Symptoms:
+${subBulletPoint}Fatigue
+${subBulletPoint}Frequent infections
+${subBulletPoint}Easy bruising/bleeding
+${subBulletPoint}Bone pain
+${subBulletPoint}Weight loss
+${subBulletPoint}Night sweats
+
+${bulletPoint}Risk Factors:
+${subBulletPoint}Age
+${subBulletPoint}Family history
+${subBulletPoint}Chemical exposure
+${subBulletPoint}Radiation exposure
+${subBulletPoint}Genetic disorders
+
+${bulletPoint}Treatment Options:
+${subBulletPoint}Chemotherapy
+${subBulletPoint}Radiation therapy
+${subBulletPoint}Stem cell transplant
+${subBulletPoint}Targeted therapy
+${subBulletPoint}Immunotherapy`;
+            }
+
+            if (message.includes('colorectal cancer')) {
+                return `🎗️ Colorectal Cancer Information:
+
+${bulletPoint}Warning Signs:
+${subBulletPoint}Change in bowel habits
+${subBulletPoint}Rectal bleeding
+${subBulletPoint}Persistent abdominal pain
+${subBulletPoint}Unexplained weight loss
+${subBulletPoint}Fatigue
+
+${bulletPoint}Risk Factors:
+${subBulletPoint}Age (more common >50)
+${subBulletPoint}Family history
+${subBulletPoint}Poor diet
+${subBulletPoint}Inflammatory bowel disease
+${subBulletPoint}Sedentary lifestyle
+
+${bulletPoint}Prevention:
+${subBulletPoint}Regular screenings
+${subBulletPoint}High-fiber diet
+${subBulletPoint}Regular exercise
+${subBulletPoint}Limit red meat
+${subBulletPoint}Avoid processed foods
+
+${bulletPoint}Treatment Options:
+${subBulletPoint}Surgery
+${subBulletPoint}Chemotherapy
+${subBulletPoint}Radiation therapy
+${subBulletPoint}Targeted therapy
+${subBulletPoint}Immunotherapy`;
+            }
+
+            // Update the cancer menu to include all types
+            if (message.includes('cancer types')) {
+                return `🎗️ Types of Cancer:
+
+${bulletPoint}Common Cancers:
+${subBulletPoint}<a href="#" onclick="setInput('breast cancer')" style="color: #4ECDC4;">Breast Cancer</a>
+${subBulletPoint}<a href="#" onclick="setInput('lung cancer')" style="color: #4ECDC4;">Lung Cancer</a>
+${subBulletPoint}<a href="#" onclick="setInput('skin cancer')" style="color: #4ECDC4;">Skin Cancer</a>
+${subBulletPoint}<a href="#" onclick="setInput('prostate cancer')" style="color: #4ECDC4;">Prostate Cancer</a>
+${subBulletPoint}<a href="#" onclick="setInput('blood cancer')" style="color: #4ECDC4;">Blood Cancer</a>
+${subBulletPoint}<a href="#" onclick="setInput('colorectal cancer')" style="color: #4ECDC4;">Colorectal Cancer</a>
+
+${bulletPoint}For detailed information about a specific type:
+${subBulletPoint}Click on the cancer type above
+${subBulletPoint}Or type the name of the cancer`;
+            }
+
+            // Default response
+            return `👋 Welcome! I can help you with:
+
+${bulletPoint}Services:
+${subBulletPoint}<a href="https://timer-eosin-nine.vercel.app/" style="color: #4ECDC4;">Medication Reminders</a>
+${subBulletPoint}<a href="https://health-chat-bot-1.vercel.app/" style="color: #4ECDC4;">Diet Planning</a>
+${subBulletPoint}<a href="https://medi-doctor-zeta.vercel.app/" style="color: #4ECDC4;">Find Doctors</a>
+${subBulletPoint}<a href="https://hospital-data-hazel.vercel.app/" style="color: #4ECDC4;">Emergency Hospitals</a>
+${subBulletPoint}<a href="https://medieq-kc1a.vercel.app/" style="color: #4ECDC4;">Medical Equipment</a>
+${subBulletPoint}<a href="https://ayurveda-sooty.vercel.app/" style="color: #4ECDC4;">Ayurvedic Treatment</a>
+
+${bulletPoint}Health Information:
+${subBulletPoint}Disease Information
+${subBulletPoint}Treatment Options
+${subBulletPoint}Prevention Tips
+${subBulletPoint}Emergency Care
+
+Please type your query or click on any service to learn more.`;
+        }
+
+        const suggestionChips = [
+            "How to manage fever?",
+            "Cold & flu remedies",
+            "Headache relief",
+            "Diet & nutrition tips",
+            "Exercise guidelines",
+            "Sleep improvement",
+            "First aid basics",
+            "Emergency care",
+            "Allergy symptoms help",
+            "Seasonal allergy tips",
+            "Food allergy advice",
+            "Pet allergy relief"
+        ];
+
+        // Update the HTML to include rotating suggestions
+        function updateSuggestionChips() {
+            const container = document.querySelector('.suggestion-chips');
+            container.innerHTML = '';
+            
+            // Show random 4 suggestions
+            const randomSuggestions = suggestionChips
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 4);
+            
+            randomSuggestions.forEach(suggestion => {
+                const chip = document.createElement('span');
+                chip.className = 'suggestion-chip';
+                chip.onclick = () => setInput(suggestion);
+                chip.textContent = suggestion;
+                container.appendChild(chip);
+            });
+        }
+
+        // Rotate suggestions every 30 seconds
+        setInterval(updateSuggestionChips, 30000);
+
+        // Event Listeners
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const service = card.querySelector('h3').textContent;
+                showServiceDetails(service);
+            });
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Enhanced message formatting
+        function formatBotResponse(response) {
+            // Convert bullet points to HTML list
+            response = response.replace(/• (.*?)(?=(?:• |\n|$))/g, '<li>$1</li>');
+            response = response.replace(/◦ (.*?)(?=(?:◦ |\n|$))/g, '<li class="sub-item">$1</li>');
+            
+            // Wrap lists in ul tags
+            if (response.includes('<li>')) {
+                response = '<ul>' + response + '</ul>';
+            }
+            
+            // Style emojis
+            response = response.replace(/([\u{1F300}-\u{1F6FF}])/gu, '<span class="emoji">$1</span>');
+            
+            // Style warning sections
+            response = response.replace(/⚠️ (.*?)(?=(?:\n|$))/g, '<div class="warning">⚠️ $1</div>');
+            
+            return response;
+        }
+
+        // Add these helper functions
+        function setInput(text) {
+            document.getElementById('userInput').value = text;
+            sendMessage();
+        }
+
+        function showTypingIndicator() {
+            const chatMessages = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot-message typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            typingDiv.id = 'typing-indicator';
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-envelope"></i> Email: medibot.health@gmail.com</p>
+                <p><i class="fas fa-phone"></i> Support: +1 (555) 123-4567</p>
+            </div>
+
+            <div class="footer-section reviews">
+                <h3>User Reviews</h3>
+                <div class="review-carousel">
+                    <div class="review">
+                        <div class="stars">★★★★★</div>
+                        <p>"Excellent healthcare companion! The medication reminders are a lifesaver."</p>
+                        <small>- Sarah Johnson</small>
+                    </div>
+                    <div class="review">
+                        <div class="stars">★★★★★</div>
+                        <p>"Very informative and user-friendly. Great for managing health conditions."</p>
+                        <small>- Michael Chen</small>
+                    </div>
+                    <div class="review">
+                        <div class="stars">★★★★½</div>
+                        <p>"The chatbot provides quick and accurate medical information."</p>
+                        <small>- David Smith</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 MediBot. All Rights Reserved.</p>
+            <p>Developed by Team MediBot | Terms of Service | Privacy Policy</p>
+        </div>
+    </footer>
+</body>
+</html>
+
