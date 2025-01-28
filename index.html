@@ -1598,7 +1598,100 @@
         display: block; /* Show the modal */
         opacity: 1; /* Fully visible */
     }
-    </style>
+
+    .chatbot-icon {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #4ecdc4;
+        color: white;
+        border-radius: 50%;
+        padding: 10px;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease;
+    }
+
+    .chatbot-icon:hover {
+        background-color: #7c4dff;
+    }
+
+    /* Chat Container Styles */
+    #chatContainer {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 300px;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+    }
+
+    .chat-header {
+        background-color: #4ecdc4;
+        color: white;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+    .chat-messages {
+        flex: 1;
+        padding: 10px;
+        overflow-y: auto;
+        max-height: 200px;
+    }
+
+    .chat-input {
+        display: flex;
+        padding: 10px;
+    }
+
+    .chat-input input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .chat-input button {
+        background-color: #4ecdc4;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 10px;
+        cursor: pointer;
+        margin-left: 5px;
+    }
+
+    .chat-input button:hover {
+        background-color: #7c4dff;
+    }
+
+    /* Centering and Font Styles */
+    .service-panel {
+        text-align: center; /* Center text */
+    }
+
+    .service-panel-title {
+        font-family: 'Walton', serif; /* Apply Walton font */
+        font-weight: bold; /* Make text bold */
+        font-size: 1.5em; /* Adjust font size as needed */
+        margin-bottom: 20px; /* Space below the title */
+    }
+
+    .service-list {
+        list-style: none; /* Remove default list styles */
+        padding: 0; /* Remove padding */
+    }
+</style>
 </head>
 <body>
     <header class="main-header">
@@ -1758,54 +1851,34 @@
     </div>
 
     <!-- Chatbot -->
-    <div class="chat-bot-button" onclick="toggleChat()">
-        <i class="fas fa-comments" style="font-size: 28px; color: white;"></i>
+    <div class="chatbot-icon" onclick="toggleChat()">
+        <i class="fas fa-robot"></i>
     </div>
 
-    <div class="chat-container" id="chatContainer">
+    <div id="chatContainer" style="display: none;">
         <div class="chat-header">
-            <div>
-                <i class="fas fa-robot"></i>
-                MediBot Assistant
-            </div>
-            <i class="fas fa-times" onclick="toggleChat()" style="cursor: pointer;"></i>
+            <h2>Chat with Us</h2>
+            <span class="close-btn" onclick="toggleChat()">&times;</span>
         </div>
         <div class="chat-messages" id="chatMessages">
-            <div class="message bot-message">
-                👋 Hello! I'm your MediBot assistant. How can I help you with your healthcare needs today?
-            </div>
+            <!-- Messages will be dynamically inserted here -->
         </div>
         <div class="chat-input">
-            <div class="input-container">
-                <input 
-                    type="text" 
-                    id="userInput" 
-                    placeholder="Ask me about health, symptoms, or medical advice..." 
-                    onkeypress="handleKeyPress(event)"
-                >
-                <button onclick="sendMessage()" class="send-button">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
-            <div class="quick-actions">
-                <button class="action-btn" onclick="setInput('Emergency symptoms')">
-                    <i class="fas fa-ambulance"></i> Emergency
-                </button>
-                <button class="action-btn" onclick="setInput('Common symptoms')">
-                    <i class="fas fa-stethoscope"></i> Symptoms
-                </button>
-                <button class="action-btn" onclick="setInput('Medicine information')">
-                    <i class="fas fa-pills"></i> Medicines
-                </button>
-                <button class="action-btn" onclick="setInput('Find nearest hospital')">
-                    <i class="fas fa-hospital"></i> Hospitals
-                </button>
-            </div>
-            <div class="suggestion-chips">
-                <!-- Dynamic suggestions will be added here -->
-            </div>
+            <input type="text" id="userInput" placeholder="Type your message..." />
+            <button onclick="sendMessage()">Send</button>
         </div>
     </div>
+
+    <script>
+        function toggleChat() {
+            const chatContainer = document.getElementById('chatContainer');
+            if (chatContainer.style.display === 'none' || chatContainer.style.display === '') {
+                chatContainer.style.display = 'block'; // Show the chat container
+            } else {
+                chatContainer.style.display = 'none'; // Hide the chat container
+            }
+        }
+    </script>
     <script>
         
     // Enhanced card interaction with traces
@@ -2039,14 +2112,18 @@
             const userInput = document.getElementById('userInput');
             const message = userInput.value.trim();
             
-            if (message === '') return;
+            console.log("User message:", message); // Debugging line
 
-            addMessage(message, 'user-message');
-            userInput.value = '';
+            if (message === '') return; // Do not send empty messages
 
+            addMessage(message, 'user-message'); // Add user message
+            userInput.value = ''; // Clear input field
+
+            // Simulate bot response after a delay
             setTimeout(() => {
                 const botResponse = generateBotResponse(message);
-                addMessage(botResponse, 'bot-message');
+                console.log("Bot response:", botResponse); // Debugging line
+                addMessage(botResponse, 'bot-message'); // Add bot response
             }, 1000);
         }
 
@@ -2054,1458 +2131,32 @@
             const chatMessages = document.getElementById('chatMessages');
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${className}`;
-            
-            if (className === 'bot-message') {
-                messageDiv.innerHTML = formatBotResponse(message);
-            } else {
-                messageDiv.textContent = message;
-            }
-            
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            messageDiv.textContent = message; // Set message text
+            chatMessages.appendChild(messageDiv); // Add message to chat
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
         }
 
         function generateBotResponse(userMessage) {
-            const message = userMessage.toLowerCase();
-            const bulletPoint = "• ";
-            const subBulletPoint = "  ◦ ";
-
-            // Emergency Hospital Response
-            if (message.includes('emergency') || message.includes('hospital')) {
-                return `🏥 Emergency Hospital Services:
-
-${bulletPoint}Types of Emergency Care:
-${subBulletPoint}<a href="https://hospital-data-hazel.vercel.app/" style="color: #4ECDC4;">24/7 Emergency Rooms</a>
-${subBulletPoint}<a href="https://hospital-data-hazel.vercel.app/" style="color: #4ECDC4;">Trauma Centers</a>
-${subBulletPoint}<a href="https://hospital-data-hazel.vercel.app/" style="color: #4ECDC4;">Urgent Care Centers</a>
-${subBulletPoint}<a href="https://hospital-data-hazel.vercel.app/" style="color: #4ECDC4;">Emergency Ambulance Services</a>
-
-${bulletPoint}When to Visit Emergency:
-${subBulletPoint}Severe chest pain
-${subBulletPoint}Difficulty breathing
-${subBulletPoint}Severe injuries/trauma
-${subBulletPoint}Stroke symptoms
-${subBulletPoint}Severe allergic reactions
-
-⚠️ For immediate emergency: Call 911`;
-            }
-
-            // Doctors Directory
-            if (message.includes('doctor') || message.includes('specialist')) {
-                return `👨‍⚕️ Medical Specialists:
-
-${bulletPoint}Find Specialists:
-${subBulletPoint}<a href="https://medi-doctor-zeta.vercel.app/" style="color: #4ECDC4;">Cardiologists</a>
-${subBulletPoint}<a href="https://medi-doctor-zeta.vercel.app/" style="color: #4ECDC4;">Neurologists</a>
-${subBulletPoint}<a href="https://medi-doctor-zeta.vercel.app/" style="color: #4ECDC4;">Pediatricians</a>
-${subBulletPoint}<a href="https://medi-doctor-zeta.vercel.app/" style="color: #4ECDC4;">Orthopedics</a>
-${subBulletPoint}<a href="https://medi-doctor-zeta.vercel.app/" style="color: #4ECDC4;">Dermatologists</a>
-
-${bulletPoint}Appointment Types:
-${subBulletPoint}Regular Check-ups
-${subBulletPoint}Specialist Consultations
-${subBulletPoint}Follow-up Visits
-${subBulletPoint}Virtual Consultations`;
-            }
-
-            // Medical Equipment
-            if (message.includes('equipment') || message.includes('medical devices')) {
-                return `🏥 Medical Equipment:
-
-${bulletPoint}Available Equipment:
-${subBulletPoint}<a href="https://medieq-kc1a.vercel.app/" style="color: #4ECDC4;">Monitoring Devices</a>
-${subBulletPoint}<a href="https://medieq-kc1a.vercel.app/" style="color: #4ECDC4;">Mobility Aids</a>
-${subBulletPoint}<a href="https://medieq-kc1a.vercel.app/" style="color: #4ECDC4;">First Aid Supplies</a>
-${subBulletPoint}<a href="https://medieq-kc1a.vercel.app/" style="color: #4ECDC4;">Home Care Equipment</a>
-
-${bulletPoint}Rental Services Available
-${bulletPoint}Purchase Options
-${bulletPoint}Maintenance Services`;
-            }
-
-            // Ayurveda
-            if (message.includes('ayurveda') || message.includes('herbal')) {
-                return `🌿 Ayurvedic Treatment:
-
-${bulletPoint}Services:
-${subBulletPoint}<a href="https://ayurveda-sooty.vercel.app/" style="color: #4ECDC4;">Herbal Medicines</a>
-${subBulletPoint}<a href="https://ayurveda-sooty.vercel.app/" style="color: #4ECDC4;">Panchakarma</a>
-${subBulletPoint}<a href="https://ayurveda-sooty.vercel.app/" style="color: #4ECDC4;">Yoga & Meditation</a>
-${subBulletPoint}<a href="https://ayurveda-sooty.vercel.app/" style="color: #4ECDC4;">Diet & Lifestyle</a>
-
-${bulletPoint}Treatments Available:
-${subBulletPoint}Customized herb combinations
-${subBulletPoint}Therapeutic massages
-${subBulletPoint}Dietary consultations
-${subBulletPoint}Lifestyle counseling`;
-            }
-
-            // Diet Planning
-            if (message.includes('diet') || message.includes('nutrition')) {
-                return `🥗 Diet Planning:
-
-${bulletPoint}Services:
-${subBulletPoint}<a href="https://health-chat-bot-1.vercel.app/" style="color: #4ECDC4;">Personalized Diet Plans</a>
-${subBulletPoint}<a href="https://health-chat-bot-1.vercel.app/" style="color: #4ECDC4;">Nutritional Assessment</a>
-${subBulletPoint}<a href="https://health-chat-bot-1.vercel.app/" style="color: #4ECDC4;">Diet Consultations</a>
-${subBulletPoint}<a href="https://health-chat-bot-1.vercel.app/" style="color: #4ECDC4;">Meal Planning</a>
-
-${bulletPoint}Special Diet Plans:
-${subBulletPoint}Weight Management
-${subBulletPoint}Diabetes Control
-${subBulletPoint}Heart Healthy
-${subBulletPoint}Sports Nutrition`;
-            }
-
-            // Medication Reminder
-            if (message.includes('medication') || message.includes('medicine reminder')) {
-                return `💊 Medication Management:
-
-${bulletPoint}Services:
-${subBulletPoint}<a href="https://timer-eosin-nine.vercel.app/" style="color: #4ECDC4;">Set Medication Reminders</a>
-${subBulletPoint}<a href="https://timer-eosin-nine.vercel.app/" style="color: #4ECDC4;">Track Medications</a>
-${subBulletPoint}<a href="https://timer-eosin-nine.vercel.app/" style="color: #4ECDC4;">Dosage Schedule</a>
-${subBulletPoint}<a href="https://timer-eosin-nine.vercel.app/" style="color: #4ECDC4;">Refill Reminders</a>
-
-${bulletPoint}Features:
-${subBulletPoint}Multiple medication tracking
-${subBulletPoint}Customizable reminders
-${subBulletPoint}Medication history
-${subBulletPoint}Share with caregivers`;
-            }
-
-            // Disease Information
-            if (message.includes('disease') || message.includes('condition')) {
-                return `📝 Disease Information:
-
-${bulletPoint}Common Diseases:
-${subBulletPoint}<a href="#" onclick="setInput('Diabetes')" style="color: #4ECDC4;">Diabetes</a>
-${subBulletPoint}<a href="#" onclick="setInput('Hypertension')" style="color: #4ECDC4;">Hypertension</a>
-${subBulletPoint}<a href="#" onclick="setInput('Asthma')" style="color: #4ECDC4;">Asthma</a>
-${subBulletPoint}<a href="#" onclick="setInput('Arthritis')" style="color: #4ECDC4;">Arthritis</a>
-${subBulletPoint}<a href="#" onclick="setInput('Heart Disease')" style="color: #4ECDC4;">Heart Disease</a>
-${subBulletPoint}<a href="#" onclick="setInput('Fever')" style="color: #4ECDC4;">Fever</a>
-${subBulletPoint}<a href="#" onclick="setInput('Common Cold')" style="color: #4ECDC4;">Common Cold</a>
-${subBulletPoint}<a href="#" onclick="setInput('Allergies')" style="color: #4ECDC4;">Allergies</a>
-
-${bulletPoint}Dangerous Conditions:
-${subBulletPoint}<a href="#" onclick="setInput('Gangrene')" style="color: #4ECDC4;">Gangrene</a>
-${subBulletPoint}<a href="#" onclick="setInput('Sepsis')" style="color: #4ECDC4;">Sepsis</a>
-${subBulletPoint}<a href="#" onclick="setInput('Meningitis')" style="color: #4ECDC4;">Meningitis</a>
-${subBulletPoint}<a href="#" onclick="setInput('Tetanus')" style="color: #4ECDC4;">Tetanus</a>
-${subBulletPoint}<a href="#" onclick="setInput('Rabies')" style="color: #4ECDC4;">Rabies</a>
-${subBulletPoint}<a href="#" onclick="setInput('Necrotizing Fasciitis')" style="color: #4ECDC4;">Necrotizing Fasciitis</a>
-${subBulletPoint}<a href="#" onclick="setInput('Ebola')" style="color: #4ECDC4;">Ebola</a>
-
-Please ask about any specific condition for detailed information.`;
-            }
-
-            // Diabetes
-            if (message.includes('diabetes')) {
-                return `💉 Diabetes - Managing Your Blood Sugar:
-
-${bulletPoint}Types:
-${subBulletPoint}Type 1
-${subBulletPoint}Type 2
-${subBulletPoint}Gestational
-
-${bulletPoint}Common Symptoms:
-${subBulletPoint}Frequent urination
-${subBulletPoint}Excessive thirst
-${subBulletPoint}Fatigue
-${subBulletPoint}Blurry vision
-${subBulletPoint}Slow healing wounds
-
-${bulletPoint}Management Strategies:
-${subBulletPoint}Regular exercise
-${subBulletPoint}Balanced diet
-${subBulletPoint}Medication as prescribed
-${subBulletPoint}Regular check-ups
-${subBulletPoint}Blood sugar monitoring
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Severe symptoms
-${subBulletPoint}Uncontrolled blood sugar
-${subBulletPoint}Complications (heart disease, kidney disease, etc.)
-
-${bulletPoint}Emergency Indicators:
-${subBulletPoint}Severe hypoglycemia (low blood sugar)
-${subBulletPoint}Diabetic ketoacidosis (high blood sugar)
-
-${bulletPoint}Prevention Tips:
-${subBulletPoint}Maintain a healthy weight
-${subBulletPoint}Regular physical activity
-${subBulletPoint}Balanced diet
-${subBulletPoint}Regular screenings
-${subBulletPoint}Manage stress levels`;
-            }
-
-            // Hypertension
-            if (message.includes('hypertension') || message.includes('blood pressure')) {
-                return `🩸 Hypertension - Controlling Your Blood Pressure:
-
-${bulletPoint}Different Stages:
-${subBulletPoint}Normal (<120/80)
-${subBulletPoint}Elevated (120-129/<80)
-${subBulletPoint}Stage 1 Hypertension (130-139/80-89)
-${subBulletPoint}Stage 2 Hypertension (140/90 or higher)
-${subBulletPoint}Hypertensive crisis (systolic >180 or diastolic >120)
-
-${bulletPoint}Common Symptoms:
-${subBulletPoint}Headache
-${subBulletPoint}Dizziness
-${subBulletPoint}Nosebleeds
-${subBulletPoint}Shortness of breath
-${subBulletPoint}Chest pain
-
-${bulletPoint}Management Strategies:
-${subBulletPoint}Lifestyle changes (diet, exercise, weight loss)
-${subBulletPoint}Medication as prescribed
-${subBulletPoint}Regular check-ups
-${subBulletPoint}Blood pressure monitoring
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Severe symptoms
-${subBulletPoint}Uncontrolled blood pressure
-${subBulletPoint}Complications (stroke, heart attack, kidney disease, etc.)
-
-${bulletPoint}Emergency Indicators:
-${subBulletPoint}Severe hypertensive crisis
-${subBulletPoint}Sudden onset of symptoms
-
-${bulletPoint}Prevention Tips:
-${subBulletPoint}Healthy diet
-${subBulletPoint}Regular exercise
-${subBulletPoint}Maintain a healthy weight
-${subBulletPoint}Limit alcohol consumption
-${subBulletPoint}Manage stress levels`;
-            }
-
-            // Asthma
-            if (message.includes('asthma')) {
-                return `💨 Asthma - Managing Your Breathing:
-
-${bulletPoint}Respiratory Condition:
-${subBulletPoint}Chronic inflammation of airways
-${subBulletPoint}Narrowed and swollen airways
-${subBulletPoint}Increased mucus production
-
-${bulletPoint}Common Symptoms:
-${subBulletPoint}Wheezing
-${subBulletPoint}Coughing
-${subBulletPoint}Shortness of breath
-${subBulletPoint}Chest tightness
-${subBulletPoint}Nighttime symptoms
-
-${bulletPoint}Management Strategies:
-${subBulletPoint}Avoid triggers (allergens, irritants, smoke)
-${subBulletPoint}Use inhalers as prescribed
-${subBulletPoint}Regular check-ups
-${subBulletPoint}Asthma action plan
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Severe symptoms
-${subBulletPoint}Difficulty breathing
-${subBulletPoint}Blue lips or fingernails
-
-${bulletPoint}Emergency Indicators:
-${subBulletPoint}Sudden worsening of symptoms
-${subBulletPoint}Loss of consciousness
-
-${bulletPoint}Prevention Tips:
-${subBulletPoint}Avoid known triggers
-${subBulletPoint}Regular exercise
-${subBulletPoint}Maintain a healthy weight
-${subBulletPoint}Avoid smoking
-${subBulletPoint}Manage stress levels`;
-            }
-
-            // Arthritis
-            if (message.includes('arthritis')) {
-                return `🦵 Arthritis - Managing Joint Pain:
-
-${bulletPoint}Types:
-${subBulletPoint}Osteoarthritis (wear and tear)
-${subBulletPoint}Rheumatoid Arthritis (autoimmune)
-${subBulletPoint}Psoriatic Arthritis (skin condition)
-${subBulletPoint}Gout (uric acid buildup)
-
-${bulletPoint}Common Symptoms:
-${subBulletPoint}Joint pain and stiffness
-${subBulletPoint}Swelling
-${subBulletPoint}Redness
-${subBulletPoint}Limited range of motion
-
-${bulletPoint}Management Strategies:
-${subBulletPoint}Exercise (gentle, low-impact)
-${subBulletPoint}Heat/cold therapy
-${subBulletPoint}Medication as prescribed
-${subBulletPoint}Regular check-ups
-${subBulletPoint}Lifestyle modifications
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Severe pain
-${subBulletPoint}Inability to move joints
-${subBulletPoint}Fever or infection
-
-${bulletPoint}Emergency Indicators:
-${subBulletPoint}Sudden onset of symptoms
-${subBulletPoint}Joint deformity
-
-${bulletPoint}Prevention Tips:
-${subBulletPoint}Maintain a healthy weight
-${subBulletPoint}Regular exercise
-${subBulletPoint}Avoid repetitive joint injuries
-${subBulletPoint}Maintain good posture
-${subBulletPoint}Manage stress levels`;
-            }
-
-            // Heart Disease
-            if (message.includes('heart disease')) {
-                return `🫀 Heart Disease - Protecting Your Heart:
-
-${bulletPoint}Types:
-${subBulletPoint}Coronary Artery Disease (CAD)
-${subBulletPoint}Heart Failure
-${subBulletPoint}Arrhythmia
-${subBulletPoint}Valve Disease
-
-${bulletPoint}Common Symptoms:
-${subBulletPoint}Chest pain or discomfort
-${subBulletPoint}Shortness of breath
-${subBulletPoint}Fatigue
-${subBulletPoint}Irregular heartbeat
-${subBulletPoint}Swelling in legs or abdomen
-
-${bulletPoint}Management Strategies:
-${subBulletPoint}Medication as prescribed
-${subBulletPoint}Healthy lifestyle changes
-${subBulletPoint}Regular check-ups
-${subBulletPoint}Heart-healthy diet
-${subBulletPoint}Exercise program
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Severe chest pain
-${subBulletPoint}Shortness of breath at rest
-${subBulletPoint}Sudden dizziness or fainting
-
-${bulletPoint}Emergency Indicators:
-${subBulletPoint}Chest pain that radiates to jaw or arm
-${subBulletPoint}Sudden onset of shortness of breath
-${subBulletPoint}Unstable angina
-
-${bulletPoint}Prevention Tips:
-${subBulletPoint}Healthy diet
-${subBulletPoint}Regular exercise
-${subBulletPoint}Maintain a healthy weight
-${subBulletPoint}Limit alcohol consumption
-${subBulletPoint}Manage stress levels
-${subBulletPoint}Regular screenings
-${subBulletPoint}Quit smoking`;
-            }
-
-            // Fever
-            if (message.includes('fever')) {
-                return `🌡️ Fever - Managing Body Temperature:
-
-${bulletPoint}General Fever Management:
-${subBulletPoint}Rest
-${subBulletPoint}Stay hydrated
-${subBulletPoint}Over-the-counter pain relievers
-${subBulletPoint}Cooling measures (sponging, lukewarm bath)
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Fever above 105°F (40.5°C)
-${subBulletPoint}Fever lasting more than 3 days
-${subBulletPoint}Severe symptoms (confusion, seizures)
-
-${bulletPoint}Emergency Indicators:
-${subBulletPoint}High fever with severe symptoms
-${subBulletPoint}Fever in infants or young children
-
-${bulletPoint}Prevention Tips:
-${subBulletPoint}Stay hydrated
-${subBulletPoint}Avoid close contact with sick people
-${subBulletPoint}Wash hands frequently
-${subBulletPoint}Cover mouth and nose when coughing or sneezing
-${subBulletPoint}Avoid sharing personal items`;
-            }
-
-            // Common Cold
-            if (message.includes('common cold') || message.includes('cold')) {
-                return `🤧 Common Cold - Overcoming Nasal Congestion:
-
-${bulletPoint}Symptoms:
-${subBulletPoint}Runny or stuffy nose
-${subBulletPoint}Sneezing
-${subBulletPoint}Cough
-${subBulletPoint}Sore throat
-${subBulletPoint}Mild body aches
-
-${bulletPoint}Management Strategies:
-${subBulletPoint}Rest
-${subBulletPoint}Stay hydrated
-${subBulletPoint}Over-the-counter decongestants
-${subBulletPoint}Humidifier or steam inhalation
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Fever
-${subBulletPoint}Difficulty breathing
-${subBulletPoint}Persistent symptoms for more than 10 days
-
-${bulletPoint}Emergency Indicators:
-${subBulletPoint}Severe symptoms
-${subBulletPoint}Dehydration
-
-${bulletPoint}Prevention Tips:
-${subBulletPoint}Wash hands frequently
-${subBulletPoint}Avoid close contact with sick people
-${subBulletPoint}Cover mouth and nose when coughing or sneezing
-${subBulletPoint}Get vaccinated for flu and COVID-19
-${subBulletPoint}Stay hydrated`;
-            }
-
-            // Allergies
-            if (message.includes('allergies')) {
-                return `🤧 Allergies - Managing Sensitivity Reactions:
-
-${bulletPoint}Types:
-${subBulletPoint}Seasonal allergies
-${subBulletPoint}Food allergies
-${subBulletPoint}Pet allergies
-${subBulletPoint}Insect sting allergies
-${subBulletPoint}Latex allergies
-
-${bulletPoint}Common Symptoms:
-${subBulletPoint}Sneezing
-${subBulletPoint}Itchy, watery eyes
-${subBulletPoint}Runny nose
-${subBulletPoint}Coughing
-${subBulletPoint}Hives or rash
-${subBulletPoint}Swelling (face, lips, tongue)
-
-${bulletPoint}Management Strategies:
-${subBulletPoint}Avoid allergens
-${subBulletPoint}Antihistamines
-${subBulletPoint}Decongestants
-${subBulletPoint}Epinephrine for severe reactions
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Severe symptoms
-${subBulletPoint}Difficulty breathing
-${subBulletPoint}Swelling of the face or throat
-
-${bulletPoint}Emergency Indicators:
-${subBulletPoint}Anaphylaxis (severe allergic reaction)
-
-${bulletPoint}Prevention Tips:
-${subBulletPoint}Avoid known allergens
-${subBulletPoint}Regular allergy testing
-${subBulletPoint}Avoid smoking
-${subBulletPoint}Keep pets clean and groomed
-${subBulletPoint}Avoid insect stings`;
-            }
-
-            // Gangrene
-            if (message.includes('gangrene')) {
-                return `⚠️ Gangrene - Serious Condition:
-
-${bulletPoint}Types:
-${subBulletPoint}Dry Gangrene
-${subBulletPoint}Wet Gangrene
-${subBulletPoint}Gas Gangrene
-${subBulletPoint}Internal Gangrene
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Skin discoloration (black/green/brown)
-${subBulletPoint}Severe pain followed by loss of sensation
-${subBulletPoint}Skin becomes cold and numb
-${subBulletPoint}Foul-smelling discharge
-${subBulletPoint}Swelling and blistering
-
-⚠️ IMMEDIATE MEDICAL ATTENTION REQUIRED
-${bulletPoint}This is a medical emergency
-${bulletPoint}Can lead to amputation if untreated
-${bulletPoint}Call emergency services immediately`;
-            }
-
-            // Sepsis
-            if (message.includes('sepsis')) {
-                return `🚨 Sepsis - Life-Threatening Condition:
-
-${bulletPoint}Warning Signs (TIME):
-${subBulletPoint}Temperature - Higher/lower than normal
-${subBulletPoint}Infection - Signs of infection
-${subBulletPoint}Mental decline - Confusion/sleepy
-${subBulletPoint}Extremely ill - Severe pain/discomfort
-
-${bulletPoint}High Risk Groups:
-${subBulletPoint}Elderly people
-${subBulletPoint}Infants
-${subBulletPoint}People with weakened immune systems
-${subBulletPoint}People with chronic conditions
-
-⚠️ REQUIRES IMMEDIATE EMERGENCY CARE
-${bulletPoint}Call emergency services immediately
-${bulletPoint}Every hour delay increases mortality risk`;
-            }
-
-            // Meningitis
-            if (message.includes('meningitis')) {
-                return `🧠 Meningitis - Medical Emergency:
-
-${bulletPoint}Critical Symptoms:
-${subBulletPoint}Severe headache
-${subBulletPoint}Stiff neck
-${subBulletPoint}High fever
-${subBulletPoint}Confusion/altered consciousness
-${subBulletPoint}Sensitivity to light
-${subBulletPoint}Purple/red rash (doesn't fade under pressure)
-
-${bulletPoint}Types:
-${subBulletPoint}Bacterial (most dangerous)
-${subBulletPoint}Viral
-${subBulletPoint}Fungal
-${subBulletPoint}Parasitic
-
-⚠️ SEEK IMMEDIATE MEDICAL ATTENTION
-${bulletPoint}Can be fatal within hours
-${bulletPoint}Early treatment is crucial`;
-            }
-
-            // Tetanus
-            if (message.includes('tetanus')) {
-                return `💉 Tetanus - Severe Infection:
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Jaw cramping ("lockjaw")
-${subBulletPoint}Muscle stiffness/spasms
-${subBulletPoint}Difficulty swallowing
-${subBulletPoint}High fever
-${subBulletPoint}Sweating
-${subBulletPoint}Rapid heartbeat
-
-${bulletPoint}Risk Factors:
-${subBulletPoint}Deep wounds
-${subBulletPoint}Burns
-${subBulletPoint}Animal bites
-${subBulletPoint}Rusty metal injuries
-
-⚠️ PREVENTION & EMERGENCY:
-${bulletPoint}Keep tetanus shots up to date
-${bulletPoint}Seek immediate care for suspected cases
-${bulletPoint}Clean all wounds properly`;
-            }
-
-            // Rabies
-            if (message.includes('rabies')) {
-                return `🦠 Rabies - Fatal Disease:
-
-${bulletPoint}Early Symptoms:
-${subBulletPoint}Fever
-${subBulletPoint}Headache
-${subBulletPoint}Anxiety
-${subBulletPoint}Confusion
-${subBulletPoint}Hyperactivity
-
-${bulletPoint}Advanced Symptoms:
-${subBulletPoint}Hydrophobia (fear of water)
-${subBulletPoint}Hallucinations
-${subBulletPoint}Paralysis
-${subBulletPoint}Difficulty swallowing
-
-⚠️ IMMEDIATE ACTION REQUIRED:
-${bulletPoint}Seek treatment immediately after exposure
-${bulletPoint}Clean wound thoroughly
-${bulletPoint}Get post-exposure prophylaxis
-${bulletPoint}Almost always fatal if symptoms develop`;
-            }
-
-            // Necrotizing Fasciitis
-            if (message.includes('necrotizing fasciitis')) {
-                return `🚨 Necrotizing Fasciitis - Flesh-Eating Disease:
-
-${bulletPoint}Early Signs:
-${subBulletPoint}Severe pain
-${subBulletPoint}Red/warm skin
-${subBulletPoint}Fever
-${subBulletPoint}Fatigue
-
-${bulletPoint}Advanced Signs:
-${subBulletPoint}Black spots on skin
-${subBulletPoint}Blisters/ulcers
-${subBulletPoint}Skin breakdown
-${subBulletPoint}Toxic shock symptoms
-
-⚠️ EXTREME EMERGENCY:
-${bulletPoint}Rapidly spreading infection
-${bulletPoint}Can be fatal within days
-${bulletPoint}Requires immediate surgical intervention
-${bulletPoint}Call emergency services immediately`;
-            }
-
-            // Ebola
-            if (message.includes('ebola')) {
-                return `🦠 Ebola Virus Disease:
-
-${bulletPoint}Initial Symptoms:
-${subBulletPoint}Sudden fever
-${subBulletPoint}Severe headache
-${subBulletPoint}Muscle pain
-${subBulletPoint}Fatigue
-
-${bulletPoint}Progressive Symptoms:
-${subBulletPoint}Vomiting and diarrhea
-${subBulletPoint}Internal/external bleeding
-${subBulletPoint}Organ failure
-${subBulletPoint}Rash
-
-⚠️ HIGHLY INFECTIOUS:
-${bulletPoint}Isolate suspected cases
-${bulletPoint}Contact health authorities immediately
-${bulletPoint}Follow strict infection control
-${bulletPoint}High mortality rate`;
-            }
-
-            // Dangerous Conditions
-            if (message.includes('dangerous') || message.includes('severe')) {
-                return `⚠️ Dangerous Medical Conditions:
-
-${bulletPoint}Life-Threatening Conditions:
-${subBulletPoint}Gangrene
-${subBulletPoint}Sepsis
-${subBulletPoint}Meningitis
-${subBulletPoint}Tetanus
-${subBulletPoint}Rabies
-${subBulletPoint}Necrotizing Fasciitis
-${subBulletPoint}Ebola
-
-Please ask about any specific condition for detailed information.
-
-⚠️ NOTE: These conditions require immediate medical attention.
-Call emergency services if you suspect any of these conditions.`;
-            }
-
-            // STDs
-            if (message.includes('std') || message.includes('sti') || message.includes('sexual disease')) {
-                return `🏥 Sexually Transmitted Infections (STIs):
-
-${bulletPoint}Common STIs:
-${subBulletPoint}HIV/AIDS
-${subBulletPoint}HPV (Human Papillomavirus)
-${subBulletPoint}Hepatitis B
-${subBulletPoint}Herpes
-${subBulletPoint}Chlamydia
-${subBulletPoint}Gonorrhea
-${subBulletPoint}Syphilis
-
-${bulletPoint}General Prevention:
-${subBulletPoint}Practice safe sex
-${subBulletPoint}Regular health screenings
-${subBulletPoint}Vaccination (where available)
-${subBulletPoint}Open communication with partners
-
-${bulletPoint}When to Seek Care:
-${subBulletPoint}Unusual discharge
-${subBulletPoint}Pain or burning sensation
-${subBulletPoint}Sores or rashes
-${subBulletPoint}After potential exposure
-
-⚠️ Important Notes:
-${bulletPoint}Many STIs are asymptomatic
-${bulletPoint}Early detection is crucial
-${bulletPoint}All STIs are treatable
-${bulletPoint}Some are curable with medication
-${bulletPoint}Confidential testing available
-
-For specific information, ask about any particular condition.`;
-            }
-
-            // HIV/AIDS
-            if (message.includes('hiv') || message.includes('aids')) {
-                return `🏥 HIV/AIDS Information:
-
-${bulletPoint}Early HIV Symptoms:
-${subBulletPoint}Fever and chills
-${subBulletPoint}Severe fatigue
-${subBulletPoint}Muscle aches
-${subBulletPoint}Sore throat
-${subBulletPoint}Swollen lymph nodes
-
-${bulletPoint}Prevention:
-${subBulletPoint}Safe sex practices
-${subBulletPoint}Regular testing
-${subBulletPoint}PrEP (Pre-Exposure Prophylaxis)
-${subBulletPoint}PEP (Post-Exposure Prophylaxis)
-
-${bulletPoint}Treatment Options:
-${subBulletPoint}Antiretroviral therapy
-${subBulletPoint}Regular medical monitoring
-${subBulletPoint}Immune system support
-${subBulletPoint}Lifestyle modifications
-
-⚠️ Important:
-${bulletPoint}Early detection is crucial
-${bulletPoint}Treatment is highly effective
-${bulletPoint}Normal lifespan possible with care
-${bulletPoint}Confidential testing available`;
-            }
-
-            // Herpes
-            if (message.includes('herpes')) {
-                return `🏥 Herpes Information:
-
-${bulletPoint}Types:
-${subBulletPoint}HSV-1 (oral)
-${subBulletPoint}HSV-2 (genital)
-
-${bulletPoint}Symptoms:
-${subBulletPoint}Blisters or sores
-${subBulletPoint}Pain or itching
-${subBulletPoint}Flu-like symptoms
-${subBulletPoint}Burning sensation
-
-${bulletPoint}Management:
-${subBulletPoint}Antiviral medications
-${subBulletPoint}Pain management
-${subBulletPoint}Stress reduction
-${subBulletPoint}Trigger avoidance
-
-⚠️ Important Notes:
-${bulletPoint}Very common condition
-${bulletPoint}Manageable with medication
-${bulletPoint}Avoid contact during outbreaks
-${bulletPoint}Discuss with healthcare provider`;
-            }
-
-            // Syphilis
-            if (message.includes('syphilis')) {
-                return `🏥 Syphilis Information:
-
-${bulletPoint}Stages:
-${subBulletPoint}Primary (painless sore)
-${subBulletPoint}Secondary (rash, fever)
-${subBulletPoint}Latent (no symptoms)
-${subBulletPoint}Tertiary (severe complications)
-
-${bulletPoint}Treatment:
-${subBulletPoint}Penicillin therapy
-${subBulletPoint}Regular monitoring
-${subBulletPoint}Partner notification
-${subBulletPoint}Follow-up testing
-
-⚠️ Important:
-${bulletPoint}Curable with early treatment
-${bulletPoint}Can be serious if untreated
-${bulletPoint}Regular testing recommended
-${bulletPoint}All partners should be tested`;
-            }
-
-            // HPV
-            if (message.includes('hpv')) {
-                return `🏥 HPV (Human Papillomavirus):
-
-${bulletPoint}Types:
-${subBulletPoint}Low-risk (warts)
-${subBulletPoint}High-risk (cancer risk)
-
-${bulletPoint}Prevention:
-${subBulletPoint}HPV vaccination
-${subBulletPoint}Regular screening
-${subBulletPoint}Safe sex practices
-${subBulletPoint}Regular check-ups
-
-${bulletPoint}Management:
-${subBulletPoint}Regular Pap smears
-${subBulletPoint}Wart treatment if needed
-${subBulletPoint}Cancer screening
-${subBulletPoint}Follow-up care
-
-⚠️ Important:
-${bulletPoint}Very common infection
-${bulletPoint}Often no symptoms
-${bulletPoint}Vaccination recommended
-${bulletPoint}Regular screening crucial`;
-            }
-
-            // Alzheimer's Disease
-            if (message.includes('alzheimer')) {
-                return `🧠 Alzheimer's Disease Information:
-
-${bulletPoint}Early Signs:
-${subBulletPoint}Memory loss
-${subBulletPoint}Difficulty planning/problem solving
-${subBulletPoint}Confusion with time/place
-${subBulletPoint}Problems with words
-${subBulletPoint}Poor judgment
-${subBulletPoint}Mood changes
-
-${bulletPoint}Risk Factors:
-${subBulletPoint}Age (65+)
-${subBulletPoint}Family history
-${subBulletPoint}Genetics
-${subBulletPoint}Head injuries
-${subBulletPoint}Heart disease
-${subBulletPoint}Poor sleep patterns
-
-${bulletPoint}Management:
-${subBulletPoint}Medications
-${subBulletPoint}Cognitive stimulation
-${subBulletPoint}Regular routine
-${subBulletPoint}Safe environment
-${subBulletPoint}Support groups
-${subBulletPoint}Caregiver support
-
-${bulletPoint}Prevention Tips:
-${subBulletPoint}Mental activities
-${subBulletPoint}Physical exercise
-${subBulletPoint}Healthy diet
-${subBulletPoint}Social engagement
-${subBulletPoint}Good sleep habits`;
-            }
-
-            // Tuberculosis (TB)
-            if (message.includes('tuberculosis') || message.includes('tb')) {
-                return `🫁 Tuberculosis (TB) Information:
-
-${bulletPoint}Symptoms:
-${subBulletPoint}Persistent cough (3+ weeks)
-${subBulletPoint}Chest pain
-${subBulletPoint}Blood in sputum
-${subBulletPoint}Weight loss
-${subBulletPoint}Night sweats
-${subBulletPoint}Fever
-${subBulletPoint}Fatigue
-
-${bulletPoint}Risk Factors:
-${subBulletPoint}Close contact with TB patients
-${subBulletPoint}Weakened immune system
-${subBulletPoint}Poor living conditions
-${subBulletPoint}Malnutrition
-${subBulletPoint}HIV/AIDS
-
-${bulletPoint}Treatment:
-${subBulletPoint}Antibiotics (6-9 months)
-${subBulletPoint}Regular monitoring
-${subBulletPoint}Completion of full course
-${subBulletPoint}Isolation during infectious period
-
-⚠️ Important:
-${bulletPoint}Highly contagious
-${bulletPoint}Complete treatment essential
-${bulletPoint}Regular follow-up needed`;
-            }
-
-            // Pneumonia
-            if (message.includes('pneumonia')) {
-                return `🫁 Pneumonia Information:
-
-${bulletPoint}Symptoms:
-${subBulletPoint}Chest pain
-${subBulletPoint}Difficulty breathing
-${subBulletPoint}High fever
-${subBulletPoint}Cough with phlegm
-${subBulletPoint}Fatigue
-${subBulletPoint}Confusion (elderly)
-
-${bulletPoint}Risk Groups:
-${subBulletPoint}Young children
-${subBulletPoint}Elderly (65+)
-${subBulletPoint}Smokers
-${subBulletPoint}Weakened immune system
-${subBulletPoint}Chronic conditions
-
-${bulletPoint}Treatment:
-${subBulletPoint}Antibiotics
-${subBulletPoint}Rest
-${subBulletPoint}Hydration
-${subBulletPoint}Fever management
-
-${bulletPoint}Prevention:
-${subBulletPoint}Vaccination
-${subBulletPoint}Good hygiene
-${subBulletPoint}No smoking
-${subBulletPoint}Healthy lifestyle`;
-            }
-
-            // Malaria
-            if (message.includes('malaria')) {
-                return `🦟 Malaria Information:
-
-${bulletPoint}Symptoms:
-${subBulletPoint}High fever
-${subBulletPoint}Chills
-${subBulletPoint}Sweating
-${subBulletPoint}Headache
-${subBulletPoint}Body aches
-${subBulletPoint}Nausea/vomiting
-
-${bulletPoint}Prevention:
-${subBulletPoint}Mosquito nets
-${subBulletPoint}Insect repellent
-${subBulletPoint}Protective clothing
-${subBulletPoint}Anti-malarial drugs
-${subBulletPoint}Avoid mosquito areas
-
-${bulletPoint}Treatment:
-${subBulletPoint}Anti-malarial medication
-${subBulletPoint}Supportive care
-${subBulletPoint}Hydration
-${subBulletPoint}Rest
-
-⚠️ Seek immediate care if symptoms appear`;
-            }
-
-            // Dengue
-            if (message.includes('dengue')) {
-                return `🦟 Dengue Fever Information:
-
-${bulletPoint}Symptoms:
-${subBulletPoint}High fever
-${subBulletPoint}Severe headache
-${subBulletPoint}Eye pain
-${subBulletPoint}Joint/muscle pain
-${subBulletPoint}Rash
-${subBulletPoint}Bleeding gums/nose
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Severe abdominal pain
-${subBulletPoint}Persistent vomiting
-${subBulletPoint}Rapid breathing
-${subBulletPoint}Blood in vomit
-${subBulletPoint}Fatigue/restlessness
-
-${bulletPoint}Prevention:
-${subBulletPoint}Mosquito control
-${subBulletPoint}Use repellents
-${subBulletPoint}Wear protective clothing
-${subBulletPoint}Remove standing water
-
-⚠️ Requires immediate medical attention`;
-            }
-
-            // Obesity
-            if (message.includes('obesity') || message.includes('weight')) {
-                return `⚖️ Obesity-Related Information:
-
-${bulletPoint}Health Risks:
-${subBulletPoint}Heart disease
-${subBulletPoint}Diabetes
-${subBulletPoint}High blood pressure
-${subBulletPoint}Joint problems
-${subBulletPoint}Sleep apnea
-${subBulletPoint}Mental health issues
-
-${bulletPoint}Management:
-${subBulletPoint}Healthy diet
-${subBulletPoint}Regular exercise
-${subBulletPoint}Behavior modification
-${subBulletPoint}Medical supervision
-${subBulletPoint}Support groups
-
-${bulletPoint}Treatment Options:
-${subBulletPoint}Lifestyle changes
-${subBulletPoint}Medication
-${subBulletPoint}Bariatric surgery
-${subBulletPoint}Counseling
-
-${bulletPoint}Prevention:
-${subBulletPoint}Balanced nutrition
-${subBulletPoint}Physical activity
-${subBulletPoint}Regular check-ups
-${subBulletPoint}Stress management`;
-            }
-
-            // Mental Health
-            if (message.includes('mental health') || message.includes('depression') || message.includes('anxiety')) {
-                return `🧠 Mental Health Information:
-
-${bulletPoint}Common Conditions:
-${subBulletPoint}Depression
-${subBulletPoint}Anxiety disorders
-${subBulletPoint}Bipolar disorder
-${subBulletPoint}PTSD
-${subBulletPoint}Eating disorders
-${subBulletPoint}Schizophrenia
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Persistent sadness
-${subBulletPoint}Excessive worrying
-${subBulletPoint}Social withdrawal
-${subBulletPoint}Sleep changes
-${subBulletPoint}Mood swings
-${subBulletPoint}Suicidal thoughts
-
-${bulletPoint}Treatment Options:
-${subBulletPoint}Therapy/counseling
-${subBulletPoint}Medication
-${subBulletPoint}Support groups
-${subBulletPoint}Lifestyle changes
-${subBulletPoint}Stress management
-
-${bulletPoint}Self-Help:
-${subBulletPoint}Regular exercise
-${subBulletPoint}Healthy diet
-${subBulletPoint}Good sleep habits
-${subBulletPoint}Social connections
-${subBulletPoint}Mindfulness/meditation
-
-⚠️ Seek professional help if needed
-${bulletPoint}Crisis Helpline: [Your Local Number]`;
-            }
-
-            // Childhood Diseases
-            if (message.includes('child') || message.includes('pediatric')) {
-                return `👶 Childhood Health Information:
-
-${bulletPoint}Common Conditions:
-${subBulletPoint}Measles
-${subBulletPoint}Chickenpox
-${subBulletPoint}Mumps
-${subBulletPoint}Whooping cough
-${subBulletPoint}Hand-foot-mouth disease
-
-${bulletPoint}Preventive Care:
-${subBulletPoint}Vaccinations
-${subBulletPoint}Regular check-ups
-${subBulletPoint}Good nutrition
-${subBulletPoint}Physical activity
-${subBulletPoint}Proper hygiene
-
-${bulletPoint}Development Milestones:
-${subBulletPoint}Physical growth
-${subBulletPoint}Motor skills
-${subBulletPoint}Language development
-${subBulletPoint}Social skills
-${subBulletPoint}Cognitive development
-
-⚠️ Consult pediatrician for:
-${bulletPoint}Missed milestones
-${bulletPoint}Unusual symptoms
-${bulletPoint}Behavioral changes`;
-            }
-
-            // Maternal Health
-            if (message.includes('maternal') || message.includes('pregnancy')) {
-                return `🤰 Maternal Health Information:
-
-${bulletPoint}Pregnancy Care:
-${subBulletPoint}Prenatal vitamins
-${subBulletPoint}Regular check-ups
-${subBulletPoint}Healthy diet
-${subBulletPoint}Safe exercise
-${subBulletPoint}Adequate rest
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Vaginal bleeding
-${subBulletPoint}Severe headaches
-${subBulletPoint}Vision changes
-${subBulletPoint}Reduced fetal movement
-${subBulletPoint}Contractions before 37 weeks
-
-${bulletPoint}Postpartum Care:
-${subBulletPoint}Physical recovery
-${subBulletPoint}Mental health
-${subBulletPoint}Breastfeeding support
-${subBulletPoint}Newborn care
-${subBulletPoint}Family planning
-
-⚠️ Emergency Signs:
-${bulletPoint}Severe pain
-${bulletPoint}Heavy bleeding
-${bulletPoint}High fever
-${bulletPoint}Thoughts of self-harm`;
-            }
-
-            // Update the main disease/conditions menu
-            if (message.includes('disease') || message.includes('condition')) {
-                return `🏥 Health Conditions Information:
-
-${bulletPoint}Chronic Conditions:
-${subBulletPoint}<a href="#" onclick="setInput('Alzheimer')" style="color: #4ECDC4;">Alzheimer's Disease</a>
-${subBulletPoint}<a href="#" onclick="setInput('Obesity')" style="color: #4ECDC4;">Obesity</a>
-
-${bulletPoint}Infectious Diseases:
-${subBulletPoint}<a href="#" onclick="setInput('Tuberculosis')" style="color: #4ECDC4;">Tuberculosis (TB)</a>
-${subBulletPoint}<a href="#" onclick="setInput('Pneumonia')" style="color: #4ECDC4;">Pneumonia</a>
-${subBulletPoint}<a href="#" onclick="setInput('Malaria')" style="color: #4ECDC4;">Malaria</a>
-${subBulletPoint}<a href="#" onclick="setInput('Dengue')" style="color: #4ECDC4;">Dengue Fever</a>
-
-${bulletPoint}Mental Health:
-${subBulletPoint}<a href="#" onclick="setInput('Mental Health')" style="color: #4ECDC4;">Mental Health Disorders</a>
-
-${bulletPoint}Special Categories:
-${subBulletPoint}<a href="#" onclick="setInput('Child')" style="color: #4ECDC4;">Childhood Diseases</a>
-${subBulletPoint}<a href="#" onclick="setInput('Maternal')" style="color: #4ECDC4;">Maternal Health</a>
-
-// ... (existing disease categories) ...
-
-${bulletPoint}Need help with something specific?
-${subBulletPoint}Type the condition name for more details
-${subBulletPoint}Ask about symptoms, treatments, or prevention`;
-            }
-
-            // Add this case in the generateBotResponse function, before the default response:
-            if (message.includes('cancer')) {
-                return `🎗️ Cancer Information:
-
-${bulletPoint}Common Types:
-${subBulletPoint}Breast Cancer
-${subBulletPoint}Lung Cancer
-${subBulletPoint}Colorectal Cancer
-${subBulletPoint}Prostate Cancer
-${subBulletPoint}Skin Cancer
-${subBulletPoint}Blood Cancer
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Unexplained weight loss
-${subBulletPoint}Unusual bleeding/bruising
-${subBulletPoint}Persistent cough/hoarseness
-${subBulletPoint}Changes in bowel/bladder habits
-${subBulletPoint}Unexplained pain
-${subBulletPoint}Unusual lumps/swelling
-${subBulletPoint}Changes in skin/moles
-
-${bulletPoint}Risk Factors:
-${subBulletPoint}Family history
-${subBulletPoint}Age
-${subBulletPoint}Lifestyle factors
-${subBulletPoint}Environmental exposure
-${subBulletPoint}Genetic mutations
-
-${bulletPoint}Prevention Tips:
-${subBulletPoint}Regular screenings
-${subBulletPoint}Healthy diet
-${subBulletPoint}Regular exercise
-${subBulletPoint}No smoking
-${subBulletPoint}Limited alcohol
-${subBulletPoint}Sun protection
-${subBulletPoint}Vaccinations (HPV, Hepatitis)
-
-${bulletPoint}Treatment Options:
-${subBulletPoint}Surgery
-${subBulletPoint}Chemotherapy
-${subBulletPoint}Radiation therapy
-${subBulletPoint}Immunotherapy
-${subBulletPoint}Targeted therapy
-${subBulletPoint}Hormone therapy
-
-⚠️ Important Notes:
-${bulletPoint}Early detection is crucial
-${bulletPoint}Regular check-ups recommended
-${bulletPoint}Consult doctor for any concerns
-${bulletPoint}Support groups available`;
-            }
-
-            // Also add cancer to the disease/conditions menu section:
-            if (message.includes('disease') || message.includes('condition')) {
-                return `🏥 Health Conditions Information:
-
-// ... existing categories ...
-
-${bulletPoint}Cancer Care:
-${subBulletPoint}<a href="#" onclick="setInput('Cancer')" style="color: #4ECDC4;">Cancer Information</a>
-
-// ... rest of the existing menu ...`;
-            }
-
-            // Add these cases for specific cancer types
-            if (message.includes('breast cancer')) {
-                return `🎗️ Breast Cancer Information:
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}New lump in breast/armpit
-${subBulletPoint}Breast size/shape changes
-${subBulletPoint}Skin changes/dimpling
-${subBulletPoint}Nipple discharge/inversion
-${subBulletPoint}Breast pain/discomfort
-
-${bulletPoint}Risk Factors:
-${subBulletPoint}Gender (more common in women)
-${subBulletPoint}Age (risk increases with age)
-${subBulletPoint}Family history
-${subBulletPoint}Genetic mutations (BRCA1/BRCA2)
-${subBulletPoint}Dense breast tissue
-
-${bulletPoint}Prevention:
-${subBulletPoint}Regular mammograms
-${subBulletPoint}Monthly self-exams
-${subBulletPoint}Healthy lifestyle
-${subBulletPoint}Maintain healthy weight
-${subBulletPoint}Limited alcohol consumption
-
-${bulletPoint}Treatment Options:
-${subBulletPoint}Surgery (lumpectomy/mastectomy)
-${subBulletPoint}Radiation therapy
-${subBulletPoint}Chemotherapy
-${subBulletPoint}Hormone therapy
-${subBulletPoint}Targeted therapy`;
-            }
-
-            if (message.includes('lung cancer')) {
-                return `🫁 Lung Cancer Information:
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Persistent cough
-${subBulletPoint}Chest pain
-${subBulletPoint}Shortness of breath
-${subBulletPoint}Hoarseness
-${subBulletPoint}Coughing up blood
-${subBulletPoint}Unexplained weight loss
-
-${bulletPoint}Risk Factors:
-${subBulletPoint}Smoking
-${subBulletPoint}Secondhand smoke exposure
-${subBulletPoint}Radon exposure
-${subBulletPoint}Family history
-${subBulletPoint}Air pollution
-
-${bulletPoint}Prevention:
-${subBulletPoint}Don't smoke/quit smoking
-${subBulletPoint}Avoid secondhand smoke
-${subBulletPoint}Test home for radon
-${subBulletPoint}Protect from carcinogens
-${subBulletPoint}Regular check-ups
-
-${bulletPoint}Treatment Options:
-${subBulletPoint}Surgery
-${subBulletPoint}Radiation therapy
-${subBulletPoint}Chemotherapy
-${subBulletPoint}Targeted therapy
-${subBulletPoint}Immunotherapy`;
-            }
-
-            if (message.includes('skin cancer')) {
-                return `🔬 Skin Cancer Information:
-
-${bulletPoint}Types:
-${subBulletPoint}Melanoma
-${subBulletPoint}Basal cell carcinoma
-${subBulletPoint}Squamous cell carcinoma
-
-${bulletPoint}Warning Signs (ABCDE):
-${subBulletPoint}Asymmetry
-${subBulletPoint}Border irregularity
-${subBulletPoint}Color variation
-${subBulletPoint}Diameter >6mm
-${subBulletPoint}Evolving size/shape/color
-
-${bulletPoint}Risk Factors:
-${subBulletPoint}UV exposure
-${subBulletPoint}Fair skin
-${subBulletPoint}History of sunburns
-${subBulletPoint}Family history
-${subBulletPoint}Multiple moles
-
-${bulletPoint}Prevention:
-${subBulletPoint}Use sunscreen (SPF 30+)
-${subBulletPoint}Avoid tanning beds
-${subBulletPoint}Wear protective clothing
-${subBulletPoint}Regular skin checks
-${subBulletPoint}Seek shade`;
-            }
-
-            if (message.includes('prostate cancer')) {
-                return `👨 Prostate Cancer Information:
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Difficulty urinating
-${subBulletPoint}Weak urine flow
-${subBulletPoint}Blood in urine
-${subBulletPoint}Erectile dysfunction
-${subBulletPoint}Bone pain
-
-${bulletPoint}Risk Factors:
-${subBulletPoint}Age (more common >50)
-${subBulletPoint}Race (higher in African men)
-${subBulletPoint}Family history
-${subBulletPoint}Obesity
-
-${bulletPoint}Prevention:
-${subBulletPoint}Regular screenings
-${subBulletPoint}Healthy diet
-${subBulletPoint}Regular exercise
-${subBulletPoint}Maintain healthy weight
-
-${bulletPoint}Treatment Options:
-${subBulletPoint}Active surveillance
-${subBulletPoint}Surgery
-${subBulletPoint}Radiation therapy
-${subBulletPoint}Hormone therapy
-${subBulletPoint}Chemotherapy`;
-            }
-
-            if (message.includes('blood cancer') || message.includes('leukemia')) {
-                return `🩸 Blood Cancer Information:
-
-${bulletPoint}Types:
-${subBulletPoint}Leukemia
-${subBulletPoint}Lymphoma
-${subBulletPoint}Multiple Myeloma
-
-${bulletPoint}Common Symptoms:
-${subBulletPoint}Fatigue
-${subBulletPoint}Frequent infections
-${subBulletPoint}Easy bruising/bleeding
-${subBulletPoint}Bone pain
-${subBulletPoint}Weight loss
-${subBulletPoint}Night sweats
-
-${bulletPoint}Risk Factors:
-${subBulletPoint}Age
-${subBulletPoint}Family history
-${subBulletPoint}Chemical exposure
-${subBulletPoint}Radiation exposure
-${subBulletPoint}Genetic disorders
-
-${bulletPoint}Treatment Options:
-${subBulletPoint}Chemotherapy
-${subBulletPoint}Radiation therapy
-${subBulletPoint}Stem cell transplant
-${subBulletPoint}Targeted therapy
-${subBulletPoint}Immunotherapy`;
-            }
-
-            if (message.includes('colorectal cancer')) {
-                return `🎗️ Colorectal Cancer Information:
-
-${bulletPoint}Warning Signs:
-${subBulletPoint}Change in bowel habits
-${subBulletPoint}Rectal bleeding
-${subBulletPoint}Persistent abdominal pain
-${subBulletPoint}Unexplained weight loss
-${subBulletPoint}Fatigue
-
-${bulletPoint}Risk Factors:
-${subBulletPoint}Age (more common >50)
-${subBulletPoint}Family history
-${subBulletPoint}Poor diet
-${subBulletPoint}Inflammatory bowel disease
-${subBulletPoint}Sedentary lifestyle
-
-${bulletPoint}Prevention:
-${subBulletPoint}Regular screenings
-${subBulletPoint}High-fiber diet
-${subBulletPoint}Regular exercise
-${subBulletPoint}Limit red meat
-${subBulletPoint}Avoid processed foods
-
-${bulletPoint}Treatment Options:
-${subBulletPoint}Surgery
-${subBulletPoint}Chemotherapy
-${subBulletPoint}Radiation therapy
-${subBulletPoint}Targeted therapy
-${subBulletPoint}Immunotherapy`;
-            }
-
-            // Update the cancer menu to include all types
-            if (message.includes('cancer types')) {
-                return `🎗️ Types of Cancer:
-
-${bulletPoint}Common Cancers:
-${subBulletPoint}<a href="#" onclick="setInput('breast cancer')" style="color: #4ECDC4;">Breast Cancer</a>
-${subBulletPoint}<a href="#" onclick="setInput('lung cancer')" style="color: #4ECDC4;">Lung Cancer</a>
-${subBulletPoint}<a href="#" onclick="setInput('skin cancer')" style="color: #4ECDC4;">Skin Cancer</a>
-${subBulletPoint}<a href="#" onclick="setInput('prostate cancer')" style="color: #4ECDC4;">Prostate Cancer</a>
-${subBulletPoint}<a href="#" onclick="setInput('blood cancer')" style="color: #4ECDC4;">Blood Cancer</a>
-${subBulletPoint}<a href="#" onclick="setInput('colorectal cancer')" style="color: #4ECDC4;">Colorectal Cancer</a>
-
-${bulletPoint}For detailed information about a specific type:
-${subBulletPoint}Click on the cancer type above
-${subBulletPoint}Or type the name of the cancer`;
-            }
-
-            // Fester Information
-            if (message.includes('fester') || message.includes('festering')) {
-                return `⚠️ Festering Wounds - Important Information:
-
-${bulletPoint}What is a festering wound?
-${subBulletPoint}A festering wound is one that has become infected and is producing pus.
-
-${bulletPoint}Common Causes:
-${subBulletPoint}Bacterial infection
-${subBulletPoint}Poor wound care
-${subBulletPoint}Foreign objects in the wound
-
-${bulletPoint}Symptoms:
-${subBulletPoint}Increased redness and swelling
-${subBulletPoint}Pus or fluid drainage
-${subBulletPoint}Foul odor
-${subBulletPoint}Pain or tenderness
-
-${bulletPoint}When to Seek Medical Attention:
-${subBulletPoint}If the wound shows signs of infection
-${subBulletPoint}If you have a fever
-${subBulletPoint}If the wound does not improve with home care
-
-⚠️ Always consult a healthcare professional for proper diagnosis and treatment.`;
-            }
-
-            // Default response
-            return `👋 Welcome! I can help you with:
-
-${bulletPoint}Services:
-${subBulletPoint}<a href="https://timer-eosin-nine.vercel.app/" style="color: #4ECDC4;">Medication Reminders</a>
-${subBulletPoint}<a href="https://health-chat-bot-1.vercel.app/" style="color: #4ECDC4;">Diet Planning</a>
-${subBulletPoint}<a href="https://medi-doctor-zeta.vercel.app/" style="color: #4ECDC4;">Find Doctors</a>
-${subBulletPoint}<a href="https://hospital-data-hazel.vercel.app/" style="color: #4ECDC4;">Emergency Hospitals</a>
-${subBulletPoint}<a href="https://medieq-kc1a.vercel.app/" style="color: #4ECDC4;">Medical Equipment</a>
-${subBulletPoint}<a href="https://ayurveda-sooty.vercel.app/" style="color: #4ECDC4;">Ayurvedic Treatment</a>
-
-${bulletPoint}Health Information:
-${subBulletPoint}Disease Information
-${subBulletPoint}Treatment Options
-${subBulletPoint}Prevention Tips
-${subBulletPoint}Emergency Care
-
-Please type your query or click on any service to learn more.`;
-        }
-
-        const suggestionChips = [
-            "How to manage fever?",
-            "Cold & flu remedies",
-            "Headache relief",
-            "Diet & nutrition tips",
-            "Exercise guidelines",
-            "Sleep improvement",
-            "First aid basics",
-            "Emergency care",
-            "Allergy symptoms help",
-            "Seasonal allergy tips",
-            "Food allergy advice",
-            "Pet allergy relief"
-        ];
-
-        // Update the HTML to include rotating suggestions
-        function updateSuggestionChips() {
-            const container = document.querySelector('.suggestion-chips');
-            container.innerHTML = '';
-            
-            // Show random 4 suggestions
-            const randomSuggestions = suggestionChips
-                .sort(() => 0.5 - Math.random())
-                .slice(0, 4);
-            
-            randomSuggestions.forEach(suggestion => {
-                const chip = document.createElement('span');
-                chip.className = 'suggestion-chip';
-                chip.onclick = () => setInput(suggestion);
-                chip.textContent = suggestion;
-                container.appendChild(chip);
-            });
-        }
-
-        // Rotate suggestions every 30 seconds
-        setInterval(updateSuggestionChips, 30000);
-
-        // Event Listeners
-        document.querySelectorAll('.service-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const service = card.querySelector('h3').textContent;
-                showServiceDetails(service);
-            });
-        });
-
+    const message = userMessage.toLowerCase();
+
+    if (message.includes('headache') || message.includes('pain')) {
+        return "It sounds like you're experiencing a headache. I recommend checking our **Medication Reminder** service for pain relief options. Common medications include ibuprofen or acetaminophen.";
+    } else if (message.includes('cold') || message.includes('flu')) {
+        return "For cold or flu symptoms, you might want to visit our **Hospital Locator** service to find nearby medical facilities. Common medications include decongestants and antihistamines.";
+    } else if (message.includes('diet') || message.includes('nutrition')) {
+        return "If you're looking for diet advice, our **Diet Planning** service can help you with personalized nutrition plans. It's important to maintain a balanced diet!";
+    } else if (message.includes('ayurveda') || message.includes('natural')) {
+        return "For natural remedies, you can explore our **Ayurveda** service, which offers traditional holistic healing options.";
+    } else if (message.includes('doctor') || message.includes('consultation')) {
+        return "If you need a consultation, our **Doctor Consultation** service can connect you with healthcare professionals.";
+    } else if (message.includes('symptom') || message.includes('analyze')) {
+        return "For symptom analysis, please check our **Symptom Analysis** service to get insights into your health concerns.";
+    } else if (message.includes('help') || message.includes('hi')) {
+        return "Hello! How can I assist you today? Please describe your health issue.";
+    } else {
+        return "I'm sorry, I didn't quite understand that. Can you please provide more details about your health issue?";
+    }
+}
         // Close modal when clicking outside
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) {
