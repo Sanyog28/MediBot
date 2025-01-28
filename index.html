@@ -1758,7 +1758,7 @@
                     </div>
                     <h3>Diseases</h3>
                     <p>Information about various diseases</p>
-                    <button onclick="window.open('https://list1-rosy.vercel.app/', '_blank')">Click Here</button>
+                    <button onclick="window.open('https://medi-doctor-zeta.vercel.app/', '_blank')">Click Here</button>
                 </div>
             </div>
             <div id="hospital-locator" class="service-card" data-service="hospital-locator">
@@ -1778,7 +1778,7 @@
                     </div>
                     <h3>Medical Equipment</h3>
                     <p>Essential medical devices and supplies</p>
-                    <button onclick="window.open('https://hospital-data-hazel.vercel.app/', '_blank')">Click Here</button>
+                    <button onclick="window.open('https://medieq-kc1a.vercel.app/', '_blank')">Click Here</button>
                 </div>
             </div>
             <div id="ayurveda" class="service-card" data-service="ayurveda">
@@ -1788,7 +1788,7 @@
                     </div>
                     <h3>Ayurveda</h3>
                     <p>Traditional holistic healing</p>
-                    <button onclick="window.open('https://medieq-kc1a.vercel.app/', '_blank')">Click Here</button>
+                    <button onclick="window.open('https://ayurveda-sooty.vercel.app/', '_blank')">Click Here</button>
                 </div>
             </div>
             <div id="hospital-locator" class="service-card" data-service="hospital-locator">
@@ -1798,7 +1798,7 @@
                     </div>
                     <h3>Hospitals</h3>
                     <p>Locate nearby medical facilities</p>
-                    <button onclick="window.open('https://ayurveda-sooty.vercel.app/', '_blank')">Click Here</button>
+                    <button onclick="window.open('https://hospital-data-hazel.vercel.app/', '_blank')">Click Here</button>
                 </div>
             </div>
         </div>
@@ -1918,7 +1918,7 @@
                     opacity: 0.8
                 },
                 {
-                    transform: `translate(${dx}px, ${dy}px) scale(0)`,
+                    transform: translate(${dx}px, ${dy}px) scale(0),
                     opacity: 0
                 }
             ], {
@@ -2006,19 +2006,19 @@
                 
                 // Random size between 20px and 100px
                 const size = Math.random() * 80 + 20;
-                shape.style.width = `${size}px`;
-                shape.style.height = `${size}px`;
+                shape.style.width = ${size}px;
+                shape.style.height = ${size}px;
                 
                 // Random position
-                shape.style.left = `${Math.random() * 100}%`;
-                shape.style.top = `${Math.random() * 100}%`;
+                shape.style.left = ${Math.random() * 100}%;
+                shape.style.top = ${Math.random() * 100}%;
                 
                 // Random animation duration between 15s and 30s
                 const duration = Math.random() * 15 + 15;
-                shape.style.animationDuration = `${duration}s`;
+                shape.style.animationDuration = ${duration}s;
                 
                 // Random delay
-                shape.style.animationDelay = `${Math.random() * -30}s`;
+                shape.style.animationDelay = ${Math.random() * -30}s;
                 
                 shapes.appendChild(shape);
             }
@@ -2130,7 +2130,7 @@
         function addMessage(message, className) {
             const chatMessages = document.getElementById('chatMessages');
             const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${className}`;
+            messageDiv.className = message ${className};
             messageDiv.textContent = message; // Set message text
             chatMessages.appendChild(messageDiv); // Add message to chat
             chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
@@ -2140,17 +2140,17 @@
     const message = userMessage.toLowerCase();
 
     if (message.includes('headache') || message.includes('pain')) {
-        return "It sounds like you're experiencing a headache. I recommend checking our **Medication Reminder** service for pain relief options. Common medications include ibuprofen or acetaminophen.";
+        return "It sounds like you're experiencing a headache. I recommend checking our *Medication Reminder* service for pain relief options. Common medications include ibuprofen or acetaminophen.";
     } else if (message.includes('cold') || message.includes('flu')) {
-        return "For cold or flu symptoms, you might want to visit our **Hospital Locator** service to find nearby medical facilities. Common medications include decongestants and antihistamines.";
+        return "For cold or flu symptoms, you might want to visit our *Hospital Locator* service to find nearby medical facilities. Common medications include decongestants and antihistamines.";
     } else if (message.includes('diet') || message.includes('nutrition')) {
-        return "If you're looking for diet advice, our **Diet Planning** service can help you with personalized nutrition plans. It's important to maintain a balanced diet!";
+        return "If you're looking for diet advice, our *Diet Planning* service can help you with personalized nutrition plans. It's important to maintain a balanced diet!";
     } else if (message.includes('ayurveda') || message.includes('natural')) {
-        return "For natural remedies, you can explore our **Ayurveda** service, which offers traditional holistic healing options.";
+        return "For natural remedies, you can explore our *Ayurveda* service, which offers traditional holistic healing options.";
     } else if (message.includes('doctor') || message.includes('consultation')) {
-        return "If you need a consultation, our **Doctor Consultation** service can connect you with healthcare professionals.";
+        return "If you need a consultation, our *Doctor Consultation* service can connect you with healthcare professionals.";
     } else if (message.includes('symptom') || message.includes('analyze')) {
-        return "For symptom analysis, please check our **Symptom Analysis** service to get insights into your health concerns.";
+        return "For symptom analysis, please check our *Symptom Analysis* service to get insights into your health concerns.";
     } else if (message.includes('help') || message.includes('hi')) {
         return "Hello! How can I assist you today? Please describe your health issue.";
     } else {
@@ -2179,7 +2179,7 @@
             response = response.replace(/([\u{1F300}-\u{1F6FF}])/gu, '<span class="emoji">$1</span>');
             
             // Style warning sections
-            response = response.replace(/⚠️ (.*?)(?=(?:\n|$))/g, '<div class="warning">⚠️ $1</div>');
+            response = response.replace(/⚠ (.*?)(?=(?:\n|$))/g, '<div class="warning">⚠ $1</div>');
             
             return response;
         }
@@ -2199,388 +2199,4 @@
                 <div class="typing-dot"></div>
                 <div class="typing-dot"></div>
             `;
-            typingDiv.id = 'typing-indicator';
-            chatMessages.appendChild(typingDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        // Create particles
-        function createParticles() {
-            const particlesContainer = document.createElement('div');
-            particlesContainer.className = 'particles';
-            document.body.appendChild(particlesContainer);
-
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                
-                // Random position
-                particle.style.left = `${Math.random() * 100}%`;
-                
-                // Random delay
-                particle.style.animationDelay = `${Math.random() * 20}s`;
-                
-                // Random size
-                const size = Math.random() * 4 + 2;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        // Initialize particles
-        createParticles();
-
-        // Add mouse movement effect to service cards
-        document.querySelectorAll('.service-card').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = (y - centerY) / 20;
-                const rotateY = (centerX - x) / 20;
-                
-                card.style.transform = `
-                    perspective(1000px)
-                    rotateX(${rotateX}deg)
-                    rotateY(${rotateY}deg)
-                    translateZ(10px)
-                `;
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
-            });
-        });
-
-        // Add this to your existing JavaScript
-        document.querySelectorAll('.service-card').forEach(card => {
-            // Wrap existing content in service-card-content div if not already wrapped
-            if (!card.querySelector('.service-card-content')) {
-                const content = card.innerHTML;
-                card.innerHTML = `<div class="service-card-content">${content}</div>`;
-            }
-        });
-
-        // Add staggered animation delay to letters
-        document.querySelectorAll('.logo-text span').forEach((letter, index) => {
-            letter.style.animationDelay = `${index * 0.1}s`;
-        });
-
-        // Create floating particles around logo
-        function createLogoParticles() {
-            const container = document.querySelector('.logo-container');
-            const particlesCount = 20;
-
-            for (let i = 0; i < particlesCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'logo-particle';
-                
-                // Random position
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                
-                // Random animation duration and delay
-                const duration = 3 + Math.random() * 2;
-                const delay = Math.random() * 2;
-                particle.style.animation = `floatParticle ${duration}s ${delay}s infinite`;
-                
-                container.appendChild(particle);
-            }
-        }
-
-        // Add hover effect to logo
-        const logoText = document.querySelector('.logo-text');
-        logoText.addEventListener('mouseover', () => {
-            logoText.style.transform = 'scale(1.1)';
-            document.querySelectorAll('.glow-dot').forEach(dot => {
-                dot.style.transform = 'scale(2)';
-            });
-        });
-
-        logoText.addEventListener('mouseout', () => {
-            logoText.style.transform = 'scale(1)';
-            document.querySelectorAll('.glow-dot').forEach(dot => {
-                dot.style.transform = 'scale(1)';
-            });
-        });
-
-        // Initialize particles
-        document.addEventListener('DOMContentLoaded', createLogoParticles);
-
-        // Add hover effect to main logo
-        const mainLogo = document.querySelector('.main-logo');
-        mainLogo.addEventListener('mouseover', () => {
-            mainLogo.style.transform = 'scale(1.05)';
-        });
-
-        mainLogo.addEventListener('mouseout', () => {
-            mainLogo.style.transform = 'scale(1)';
-        });
-
-        // Animate service items on scroll
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateX(0)';
-                }
-            });
-        });
-
-        document.querySelectorAll('.service-item').forEach((item, index) => {
-            item.style.opacity = '0';
-            item.style.transform = 'translateX(20px)';
-            item.style.transition = `all 0.3s ease ${index * 0.1}s`;
-            observer.observe(item);
-        });
-
-        // Add this to your existing JavaScript
-        function openLoginModal() {
-            document.getElementById('loginModal').style.display = 'block';
-        }
-
-        function openSignupModal() {
-            document.getElementById('signupModal').style.display = 'block';
-        }
-
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.remove('active'); // Remove active class to hide the modal
-        }
-
-        function switchModal(closeId, openId) {
-            closeModal(closeId);
-            openModal(openId);
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = 'none';
-            }
-        }
-
-        // Handle form submissions
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                // Add your form handling logic here
-                console.log('Form submitted:', e.target.className);
-            });
-        });
-
-        // Service navigation and scroll handling
-        document.querySelectorAll('.service-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                // Get the service name from the text content
-                const serviceName = e.target.textContent.trim().toLowerCase().replace(/\s+/g, '-');
-                
-                // Find the corresponding service card
-                const serviceCard = document.querySelector(`.service-card[data-service="${serviceName}"]`);
-                
-                if (serviceCard) {
-                    // Highlight the card temporarily
-                    serviceCard.classList.add('highlight');
-                    setTimeout(() => serviceCard.classList.remove('highlight'), 2000);
-                    
-                    // Smooth scroll to the card
-                    serviceCard.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                    });
-                }
-            });
-        });
-
-        // Add hover effect to search input
-        const searchInput = document.querySelector('.search-input');
-
-// Add event listener for mouseover
-searchInput.addEventListener('mouseover', () => {
-    if (document.activeElement !== searchInput) {
-        searchInput.style.transform = 'translateY(-1px)';
-        searchInput.style.boxShadow = `
-            0 6px 20px rgba(0, 0, 0, 0.12),
-            0 0 25px rgba(124, 77, 255, 0.15),
-            inset 0 0 10px rgba(255, 255, 255, 0.6)
-        `;
-    }
-});
-
-// Add event listener for mouseout to reset styles
-searchInput.addEventListener('mouseout', () => {
-    searchInput.style.transform = 'translateY(0)'; // Reset transform
-    searchInput.style.boxShadow = 'none'; // Reset box shadow
-});
-
-        searchInput.addEventListener('mouseout', () => {
-            if (document.activeElement !== searchInput) {
-                searchInput.style.transform = 'translateY(0)';
-                searchInput.style.boxShadow = `
-                    0 5px 15px rgba(0, 0, 0, 0.1),
-                    0 0 20px rgba(124, 77, 255, 0.1),
-                    inset 0 0 10px rgba(255, 255, 255, 0.5)
-                `;
-            }
-        });
-
-        // Function to handle service navigation
-        function scrollToService(serviceId) {
-            event.preventDefault(); // Prevent default anchor behavior
-            
-            const serviceCard = document.querySelector(`#${serviceId}`);
-            if (serviceCard) {
-                // Add highlight effect
-                serviceCard.classList.add('highlight');
-                setTimeout(() => serviceCard.classList.remove('highlight'), 2000);
-                
-                // Smooth scroll to service
-                serviceCard.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center'
-                });
-            }
-        }
-
-        // Update search box text periodically
-        let searchInput = document.querySelector('.search-input');
-        let searchTexts = [
-            "How can I help you today?",
-            "Ask me about your symptoms...",
-            "Need medical information?",
-            "Looking for health advice?",
-            "I'm here to assist you..."
-               ];
-
-        let currentTextIndex = 0;
-        searchInput.value = searchTexts[0];
-
-        setInterval(() => {
-            currentTextIndex = (currentTextIndex + 1) % searchTexts.length;
-            fadeOutIn(searchInput, searchTexts[currentTextIndex]);
-        }, 3000);
-
-        function fadeOutIn(element, newText) {
-            element.style.opacity = '0';
-            setTimeout(() => {
-                element.value = newText;
-                element.style.opacity = '1';
-            }, 500);
-        }
-
-        // Make sure your service cards have matching IDs
-        document.querySelectorAll('.service-card').forEach(card => {
-            if (!card.id) {
-                const serviceName = card.dataset.service;
-                if (serviceName) {
-                    card.id = serviceName;
-                }
-            }
-        });
-
-        // Get the service panel element
-        const servicePanel = document.querySelector('.service-panel');
-
-        // Function to hide the service panel on scroll
-        function handleScroll() {
-            if (window.scrollY > 50) { // Change 50 to the scroll distance you prefer
-                servicePanel.classList.add('hidden'); // Add the hidden class
-            } else {
-                servicePanel.classList.remove('hidden'); // Remove the hidden class
-            }
-        }
-
-        // Add scroll event listener
-        window.addEventListener('scroll', handleScroll);
-    </script>
-    <footer class="site-footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>MediBot</h3>
-                <p>Your AI Healthcare Companion</p>
-            </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <p><a href="#symptom-analysis">Symptoms</a></p>
-                <p><a href="#medication-info">Medications</a></p>
-            </div>
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <p>support@medibot.ai</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 MediBot. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <!-- Add Auth Buttons -->
-    <div class="auth-container">
-        <a href="#" class="auth-btn login-btn" onclick="openLoginModal()">
-            <i class="fas fa-sign-in-alt"></i>
-            Login
-        </a>
-        <a href="#" class="auth-btn signup-btn" onclick="openSignupModal()">
-            <i class="fas fa-user-plus"></i>
-            Sign Up
-        </a>
-    </div>
-
-
-    <!-- Add Modal Structures -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
-            <h2>Login to MediBot</h2>
-            <form class="login-form">
-                <div class="form-group">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" placeholder="Email" required>
-                </div>
-                <div class="form-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" placeholder="Password" required>
-                </div>
-                <button type="submit">Login</button>
-                <p>Don't have an account? <a href="#" onclick="switchModal('loginModal', 'signupModal')">Sign Up</a></p>
-            </form>
-        </div>
-    </div>
-
-    <div id="signupModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('signupModal')">&times;</span>
-            <h2>Create Account</h2>
-            <form class="signup-form">
-                <div class="form-group">
-                    <i class="fas fa-user"></i>
-                    <input type="text" placeholder="Full Name" required>
-                </div>
-                <div class="form-group">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" placeholder="Email" required>
-                </div>
-                <div class="form-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" placeholder="Password" required>
-                </div>
-                <div class="form-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" placeholder="Confirm Password" required>
-                </div>
-                <button type="submit">Sign Up</button>
-                <p>Already have an account? <a href="#" onclick="switchModal('signupModal', 'loginModal')">Login</a></p>
-            </form>
-        </div>
-    </div>
-</body>
-</html>
-
+            typingDiv.id = 'typing-indicato
